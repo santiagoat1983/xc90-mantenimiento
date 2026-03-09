@@ -141,19 +141,247 @@ select option{background:#1a2e40;}
 #folder-info small{font-size:11px;color:rgba(255,255,255,.35);}
 
 @media print {
-  body{background:#fff !important;color:#000 !important;}
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .no-print{display:none !important;}
-  #app{padding:0;}
-  .sis-body{display:block !important;}
-  .task-detail{display:block !important;}
+  @page{ size:A4; margin:14mm 12mm 14mm 12mm; }
+
+  /* ── Reset all screen colors ── */
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  html,body{ background:#fff !important; color:#000 !important; font-size:11pt; }
+  #app{ max-width:100%; padding:0; }
+
+  /* ── Hide screen-only elements ── */
+  .no-print,#auth-bar,#folder-info,#km-wrap,#filter-bar,
+  #history-wrap,#done-banner,#progress-bar-wrap,
+  .sis-chevron,.task-chevron,.chk,
+  .btn-nota,.nota-edit,
+  #btn-print,#btn-history,.filter-btn{ display:none !important; }
+
+  /* ── Show print-only elements ── */
+  .print-only{ display:block !important; }
+  .print-only-flex{ display:flex !important; }
+
+  /* ── Print header ── */
+  #print-header{
+    display:block !important;
+    border-bottom:3px solid #003a5c;
+    padding-bottom:10px;
+    margin-bottom:12px;
+  }
+  #print-header-top{
+    display:flex !important;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .ph-brand{ font-size:20pt; font-weight:800; color:#003a5c; letter-spacing:-1px; }
+  .ph-sub{ font-size:9pt; color:#555; margin-top:1px; }
+  .ph-badge{
+    background:#003a5c !important; color:#fff !important;
+    padding:6px 14px; border-radius:6px;
+    font-size:10pt; font-weight:700; letter-spacing:.5px;
+    white-space:nowrap;
+  }
+  #print-fields-row{
+    display:grid !important;
+    grid-template-columns: repeat(4,1fr);
+    gap:8px;
+    margin-top:10px;
+    border:1.5px solid #003a5c;
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .pf-cell{
+    padding:6px 10px;
+    border-right:1px solid #cde;
+    background:#f4f8fb !important;
+  }
+  .pf-cell:last-child{ border-right:none; }
+  .pf-label{ font-size:7pt; text-transform:uppercase; letter-spacing:1px; color:#666; font-weight:600; }
+  .pf-value{ font-size:12pt; font-weight:700; color:#003a5c; margin-top:1px; }
+  #print-progress-row{
+    display:flex !important;
+    gap:12px;
+    margin-top:8px;
+    padding:6px 10px;
+    background:#eef4fa !important;
+    border-radius:5px;
+    font-size:9pt;
+    color:#003a5c;
+    font-weight:600;
+  }
+
+  /* ── Screen header: simplify for print ── */
+  #header{ display:none !important; }
+
+  /* ── Sistema sections ── */
+  .sis-wrap{
+    background:#fff !important;
+    border:1.5px solid #003a5c !important;
+    border-radius:0 !important;
+    margin-bottom:0 !important;
+    page-break-inside:avoid;
+  }
+  .sis-wrap + .sis-wrap{ border-top:none !important; }
+  .sis-header{
+    background:#003a5c !important;
+    padding:5px 10px !important;
+    cursor:default;
+  }
+  .sis-name{ color:#fff !important; font-size:10pt !important; }
+  .sis-pct{ color:rgba(255,255,255,.7) !important; font-size:8pt !important; }
+  .sis-done-badge{ display:none; }
+  .sis-body{ display:block !important; padding:0 !important; }
+  .sis-prog{ display:none !important; }
+
+  /* ── Tasks as table rows ── */
+  .task{
+    background:#fff !important;
+    border:none !important;
+    border-bottom:1px solid #e0e8f0 !important;
+    border-radius:0 !important;
+    margin:0 !important;
+    page-break-inside:avoid;
+  }
+  .task:last-child{ border-bottom:none !important; }
+  .task.checked{ background:#f0faf2 !important; }
+  .task-header{
+    padding:5px 10px !important;
+    cursor:default;
+  }
+  /* Print checkbox replacement */
+  .task-header::before{
+    content:'';
+    display:inline-block;
+    width:14px; height:14px;
+    border:1.5px solid #003a5c;
+    border-radius:3px;
+    margin-right:7px;
+    flex-shrink:0;
+    vertical-align:middle;
+  }
+  .task.checked .task-header::before{
+    content:'✓';
+    background:#2e7d32 !important;
+    border-color:#2e7d32;
+    color:#fff;
+    font-size:10px;
+    text-align:center;
+    line-height:14px;
+  }
+  .task-name{ color:#000 !important; font-size:9.5pt !important; text-decoration:none !important; }
+  .task.checked .task-name{ color:#555 !important; text-decoration:line-through !important; }
+  .prio-badge{ font-size:7pt !important; padding:1px 5px !important; }
+
+  /* ── Task detail (nota técnica + nota personal) ── */
+  .task-detail{
+    display:block !important;
+    padding:3px 10px 6px 31px !important;
+    border-top:none !important;
+    background:#fafcff !important;
+  }
+  .task-hint{ color:#336 !important; font-size:8pt !important; margin:0 0 3px !important; font-style:italic; }
+  .detail-meta{ display:none !important; }
+  .nota-display{
+    background:#fffbe6 !important;
+    border:1px solid #e6c84a !important;
+    color:#4a3800 !important;
+    font-size:8.5pt !important;
+    padding:3px 8px !important;
+    border-radius:3px !important;
+    margin-top:3px !important;
+  }
+
+  /* ── Comentarios ── */
+  #comentarios-wrap{
+    background:#fff !important;
+    border:1.5px solid #003a5c !important;
+    border-radius:0 !important;
+    margin-top:10px !important;
+    page-break-inside:avoid;
+  }
+  #comentarios-header{ background:#e8f0f7 !important; border-bottom:1px solid #cde !important; padding:5px 10px !important; }
+  #comentarios-header p{ color:#003a5c !important; font-size:9pt !important; }
+  #comentarios-header small{ color:#666 !important; }
+  #comentarios-ta{
+    color:#000 !important; font-size:9pt !important;
+    min-height:60px !important; padding:8px 10px !important;
+    white-space:pre-wrap;
+  }
+
+  /* ── Print footer / firma ── */
+  #print-footer{
+    display:block !important;
+    margin-top:14px;
+    border-top:2px solid #003a5c;
+    padding-top:10px;
+  }
+  #print-footer-grid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .sign-box{
+    border:1px solid #aab;
+    border-radius:4px;
+    padding:8px 12px;
+    min-height:50px;
+  }
+  .sign-label{ font-size:7.5pt; text-transform:uppercase; letter-spacing:1px; color:#555; font-weight:600; margin-bottom:4px; }
+  .sign-line{ border-top:1px solid #aab; margin-top:26px; padding-top:3px; font-size:7pt; color:#888; }
+  #print-footer-note{ font-size:7.5pt; color:#888; margin-top:8px; text-align:center; }
 }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- HEADER -->
+  <!-- PRINT HEADER (hidden on screen) -->
+  <div id="print-header" style="display:none;">
+    <div id="print-header-top">
+      <div>
+        <div class="ph-brand">VOLVO XC90 D5 · 2019</div>
+        <div class="ph-sub">AWD Haldex Gen5 · Geartronic · 235 CV · 2.0 Diesel</div>
+      </div>
+      <div class="ph-badge">FICHA DE REVISIÓN</div>
+    </div>
+    <div id="print-fields-row">
+      <div class="pf-cell">
+        <div class="pf-label">Matrícula</div>
+        <div class="pf-value" id="ph-matricula">—</div>
+      </div>
+      <div class="pf-cell">
+        <div class="pf-label">Revisión programada</div>
+        <div class="pf-value" id="ph-km-prog">—</div>
+      </div>
+      <div class="pf-cell">
+        <div class="pf-label">Km reales entrada</div>
+        <div class="pf-value" id="ph-km-real">—</div>
+      </div>
+      <div class="pf-cell">
+        <div class="pf-label">Fecha</div>
+        <div class="pf-value" id="ph-fecha">—</div>
+      </div>
+    </div>
+    <div id="print-progress-row">
+      <span id="ph-prog-text">—</span>
+    </div>
+  </div>
+
+  <!-- PRINT FOOTER (hidden on screen) -->
+  <div id="print-footer" style="display:none;">
+    <div id="print-footer-grid">
+      <div class="sign-box">
+        <div class="sign-label">Mecánico / Taller</div>
+        <div class="sign-line">Firma y sello</div>
+      </div>
+      <div class="sign-box">
+        <div class="sign-label">Propietario</div>
+        <div class="sign-line">Firma</div>
+      </div>
+    </div>
+    <div id="print-footer-note">Volvo XC90 D5 AWD 2019 · Plan de Mantenimiento v4 · Generado con XC90 Mantenimiento App</div>
+  </div>
+
+  <!-- SCREEN HEADER -->
   <div id="header" class="no-print">
     <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <div>
@@ -164,6 +392,19 @@ select option{background:#1a2e40;}
         <p style="padding-left:13px;">Plan de mantenimiento · 2019 · AWD · 235 CV Diesel</p>
       </div>
       <div id="mat-area"></div>
+    </div>
+    <!-- Fecha y KM reales -->
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:6px 12px;">
+        <span style="font-size:10px;letter-spacing:1.5px;color:#7fb3c8;text-transform:uppercase;">📅 Fecha</span>
+        <input id="input-fecha" type="date" placeholder="dd/mm/aaaa"
+          style="background:transparent;border:none;border-bottom:1px solid #006fa6;color:#fff;font-size:13px;font-weight:600;outline:none;padding:1px 4px;width:130px;"/>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:6px 12px;">
+        <span style="font-size:10px;letter-spacing:1.5px;color:#7fb3c8;text-transform:uppercase;">🚗 Km reales</span>
+        <input id="input-kmreal" type="number" placeholder="ej. 32450" min="0" max="999999"
+          style="background:transparent;border:none;border-bottom:1px solid #006fa6;color:#fff;font-size:13px;font-weight:600;outline:none;padding:1px 4px;width:95px;"/>
+      </div>
     </div>
   </div>
 
@@ -302,6 +543,8 @@ let STATE = {
   checks: {},   // { "30000": { p01:true, ... } }
   notas: {},    // { "30000": { p01:"texto" } }
   comentarios:{},// { "30000": "texto" }
+  fechaReal: '',   // fecha real de la revisión (input libre)
+  kmReal: '',      // km reales del coche en el momento de la revisión
   expandedSis: {},
   expandedTask: {},
   filter: 'all',
@@ -407,6 +650,8 @@ async function loadFromDrive(){
   STATE.comentarios = data.comentarios||{};
   STATE.matricula = data.matricula||'';
   STATE.km = data.km||0;
+  STATE.fechaReal = data.fechaReal||'';
+  STATE.kmReal = data.kmReal||'';
   // sync to localStorage
   lsSave();
 }
@@ -419,6 +664,8 @@ async function saveToDrive(){
     comentarios: STATE.comentarios,
     matricula: STATE.matricula,
     km: STATE.km,
+    fechaReal: STATE.fechaReal,
+    kmReal: STATE.kmReal,
     updatedAt: new Date().toISOString()
   };
   const body=JSON.stringify(payload);
@@ -463,7 +710,8 @@ function lsSave(){
     localStorage.setItem('xc90_checks',JSON.stringify(STATE.checks));
     localStorage.setItem('xc90_meta',JSON.stringify({
       matricula:STATE.matricula, km:STATE.km,
-      notas:STATE.notas, comentarios:STATE.comentarios
+      notas:STATE.notas, comentarios:STATE.comentarios,
+      fechaReal:STATE.fechaReal, kmReal:STATE.kmReal
     }));
   }catch(e){}
 }
@@ -478,6 +726,8 @@ function lsLoad(){
       STATE.km=mm.km||0;
       STATE.notas=mm.notas||{};
       STATE.comentarios=mm.comentarios||{};
+      STATE.fechaReal=mm.fechaReal||'';
+      STATE.kmReal=mm.kmReal||'';
     }
   }catch(e){}
 }
@@ -963,11 +1213,73 @@ function renderComentarios(value){
 /* ══════════════════════════════════════════════════════════
    FULL RENDER
 ══════════════════════════════════════════════════════════ */
-function render(){
+function renderHeader(){
+  // Matrícula
   renderMatricula();
+
+  // Fecha
+  const fi=document.getElementById('input-fecha');
+  if(fi){
+    if(STATE.fechaReal && !fi.value) fi.value=STATE.fechaReal;
+    fi.onchange=function(e){
+      STATE.fechaReal=e.target.value;
+      scheduleSave();
+      updatePrintHeader();
+    };
+  }
+
+  // KM reales
+  const ki=document.getElementById('input-kmreal');
+  if(ki){
+    if(STATE.kmReal && !ki.value) ki.value=STATE.kmReal;
+    ki.onchange=function(e){
+      STATE.kmReal=e.target.value;
+      scheduleSave();
+      updatePrintHeader();
+    };
+    ki.oninput=ki.onchange;
+  }
+}
+
+function updatePrintHeader(){
+  const kmk=String(STATE.km);
+  const checks=STATE.checks[kmk]||{};
+  const tareasApl=STATE.km>0?TAREAS.filter(function(t){return shouldDo(t,STATE.km);}):[];
+  const done=tareasApl.filter(function(t){return checks[t.id];}).length;
+  const total=tareasApl.length;
+
+  // Format fecha for display
+  let fechaDisplay='—';
+  if(STATE.fechaReal){
+    try{
+      const d=new Date(STATE.fechaReal+'T12:00:00');
+      fechaDisplay=d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+    }catch(e){ fechaDisplay=STATE.fechaReal; }
+  }
+
+  var ph=document.getElementById('ph-matricula'); if(ph) ph.textContent=STATE.matricula||'—';
+  var pk=document.getElementById('ph-km-prog'); if(pk) pk.textContent=STATE.km?Number(STATE.km).toLocaleString('es-ES')+' km':'—';
+  var pr=document.getElementById('ph-km-real'); if(pr) pr.textContent=STATE.kmReal?Number(STATE.kmReal).toLocaleString('es-ES')+' km':'—';
+  var pf=document.getElementById('ph-fecha'); if(pf) pf.textContent=fechaDisplay;
+  var pp=document.getElementById('ph-prog-text');
+  if(pp) pp.textContent=total>0?
+    done+' / '+total+' tareas completadas · '+Math.round(done/total*100)+'% · '+
+    tareasApl.filter(function(t){return t.prio==='CRITICO';}).length+' críticas · '+
+    tareasApl.filter(function(t){return t.prio==='RECOMENDADO';}).length+' recomendadas':
+    'Selecciona los kilómetros para ver las tareas';
+}
+
+
+
+/* ══════════════════════════════════════════════════════════
+   FULL RENDER
+══════════════════════════════════════════════════════════ */
+function render(){
+  renderHeader();
   renderAuthBar();
   renderKmSelect();
   renderMain();
+  updatePrintHeader();
 }
 
 /* ══════════════════════════════════════════════════════════

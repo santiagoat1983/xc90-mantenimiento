@@ -933,10 +933,27 @@ function renderComentarios(value){
     el('small',{},'Observaciones · taller · pendientes para próxima revisión')
   );
   const ta=el('textarea',{id:'comentarios-ta',placeholder:'Ej:\n— Turbo con ligero ruido a 3000 rpm, monitorizar\n— Neumáticos al límite, cambiar en próxima revisión\n— Taller: Autovolvo Madrid · Mecánico: Carlos · Factura nº 1234'},value);
+  // Update state silently — NO renderMain(), NO DOM redraw.
+  // Only save to localStorage + Drive after 5s of inactivity.
+  let _comentarioTimer=null;
   ta.addEventListener('input',e=>{
     const kmk=String(STATE.km);
     STATE.comentarios[kmk]=e.target.value;
-    scheduleSave();
+    // localStorage: debounce 5 s
+    clearTimeout(_comentarioTimer);
+    _comentarioTimer=setTimeout(function(){
+      lsSave();
+      if(_token){ setState({syncState:'saving'}); clearTimeout(_saveTimer);
+        _saveTimer=setTimeout(saveToDrive,1000); }
+    },5000);
+  });
+  // Also save on blur (when user dismisses keyboard)
+  ta.addEventListener('blur',function(){
+    const kmk=String(STATE.km);
+    STATE.comentarios[kmk]=ta.value;
+    clearTimeout(_comentarioTimer);
+    lsSave();
+    if(_token){ clearTimeout(_saveTimer); _saveTimer=setTimeout(saveToDrive,800); }
   });
   wrap.appendChild(hdr);
   wrap.appendChild(ta);

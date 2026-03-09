@@ -1,975 +1,977 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <meta name="theme-color" content="#0d1f2d"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="description" content="Ficha de mantenimiento Volvo XC90 D5 2019"/>
-  <link rel="manifest" href="manifest.json"/>
-  <title>XC90 · Mantenimiento</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#0a1a2a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="description" content="Mantenimiento Volvo XC90 D5 2019"/>
+<link rel="manifest" href="manifest.json"/>
+<title>XC90 · Mantenimiento</title>
+<script src="https://accounts.google.com/gsi/client" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#0a1a2a;color:#e8f4f8;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.5;}
+#app{max-width:720px;margin:0 auto;padding:12px 14px 80px;}
+button{font-family:inherit;cursor:pointer;}
+input,textarea,select{font-family:inherit;}
+textarea{resize:vertical;}
+select option{background:#1a2e40;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:#006fa6;border-radius:2px;}
 
-  <!-- Google Identity Services -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+/* ── Layout ── */
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.col{display:flex;flex-direction:column;}
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0d1f2d; color: #E8F4F8; font-family: sans-serif; }
-    #root { min-height: 100vh; }
-    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-    @media print {
-      body { background: white !important; }
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .no-print { display: none !important; }
-    }
-  </style>
+/* ── Header ── */
+#header{padding:18px 0 14px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px;}
+#header h1{font-size:19px;font-weight:700;letter-spacing:-.5px;color:#fff;}
+#header p{font-size:11px;color:#7fb3c8;margin-top:2px;}
+#mat-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 12px;color:#fff;font-size:12px;letter-spacing:1.5px;}
+#mat-input{background:rgba(255,255,255,.08);border:1px solid #006fa6;border-radius:7px;padding:6px 10px;color:#fff;width:120px;font-size:13px;outline:none;text-transform:uppercase;}
+
+/* ── Auth bar ── */
+#auth-bar{border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#auth-bar.out{background:rgba(0,111,166,.09);border:1px solid rgba(0,111,166,.28);}
+#auth-bar.in{background:rgba(46,125,50,.09);border:1px solid rgba(46,125,50,.28);}
+#auth-bar.warn{background:rgba(184,134,11,.12);border:1px solid rgba(184,134,11,.4);}
+.auth-label{font-size:13px;font-weight:600;}
+.auth-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+#btn-login{background:#fff;border:none;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:7px;font-weight:600;font-size:13px;color:#1a2e40;box-shadow:0 2px 8px rgba(0,0,0,.35);}
+#btn-logout{background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:5px 11px;color:rgba(255,255,255,.45);font-size:12px;}
+#sync-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;}
+
+/* ── KM selector ── */
+#km-wrap{background:linear-gradient(135deg,#1a3a4a,#0d2030);border-radius:14px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 24px rgba(0,0,0,.3);}
+#km-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#7fb3c8;white-space:nowrap;}
+#km-select{background:transparent;border:none;border-bottom:2px solid #006fa6;color:#fff;font-size:20px;font-weight:700;padding:2px 6px;outline:none;appearance:none;flex:1;}
+
+/* ── Progress ── */
+#progress-bar-wrap{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:8px;}
+#progress-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#006fa6,#00b4d8);transition:width .5s ease;}
+#progress-bar.done{background:linear-gradient(90deg,#2e7d32,#4caf50);}
+.stat-pill{font-size:11px;}
+
+/* ── Filter bar ── */
+#filter-bar{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.filter-btn{border-radius:20px;padding:5px 13px;font-size:12px;font-weight:500;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:rgba(255,255,255,.55);transition:all .2s;}
+.filter-btn.active{background:#006fa6;border-color:#006fa6;color:#fff;}
+#btn-history{border-radius:20px;padding:5px 13px;font-size:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);}
+#btn-print{margin-left:auto;background:linear-gradient(135deg,#1a3a4a,#006fa6);border:1px solid rgba(0,180,216,.4);border-radius:9px;padding:8px 16px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 3px 14px rgba(0,111,166,.25);}
+
+/* ── Sistema section ── */
+.sis-wrap{border-radius:13px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);margin-bottom:10px;overflow:hidden;transition:border-color .3s;}
+.sis-wrap.done{background:rgba(46,125,50,.06);}
+.sis-header{display:flex;align-items:center;gap:12px;padding:11px 15px;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
+.sis-name{font-weight:700;font-size:14px;color:#e8f4f8;flex:1;}
+.sis-pct{font-size:11px;color:rgba(255,255,255,.35);}
+.sis-done-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;color:#fff;}
+.sis-chevron{font-size:14px;color:rgba(255,255,255,.25);transition:transform .25s;display:inline-block;}
+.sis-chevron.open{transform:rotate(180deg);}
+.sis-body{padding:0 12px 12px;}
+.sis-prog{height:3px;border-radius:2px;background:rgba(255,255,255,.08);margin-bottom:11px;overflow:hidden;}
+.sis-prog-fill{height:100%;border-radius:2px;transition:width .5s;}
+
+/* ── Task item ── */
+.task{border-radius:9px;margin-bottom:5px;overflow:hidden;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);transition:all .2s;}
+.task.checked{background:rgba(46,125,50,.1);border-color:rgba(46,125,50,.3);}
+.task-header{display:flex;align-items:center;gap:9px;padding:8px 11px;cursor:pointer;}
+.chk{width:23px;height:23px;border-radius:7px;border:2px solid rgba(255,255,255,.2);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;cursor:pointer;}
+.chk.on{border-color:#2e7d32;background:#2e7d32;box-shadow:0 0 8px rgba(46,125,50,.45);}
+.chk.on::after{content:"✓";color:#fff;font-size:13px;}
+.task-name{flex:1;font-size:13px;font-weight:500;color:#e8f4f8;transition:all .2s;}
+.task.checked .task-name{color:rgba(255,255,255,.4);text-decoration:line-through;}
+.prio-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;}
+.note-icon{font-size:12px;opacity:.6;}
+.task-chevron{font-size:11px;color:rgba(255,255,255,.25);transition:transform .2s;display:inline-block;}
+.task-chevron.open{transform:rotate(180deg);}
+.task-detail{padding:0 11px 10px 43px;border-top:1px solid rgba(255,255,255,.05);}
+.task-hint{color:#7fb3c8;font-size:12px;margin:8px 0 6px;line-height:1.6;}
+.detail-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:4px;}
+.sis-chip{font-size:11px;padding:2px 8px;border-radius:20px;}
+.interval-chip{font-size:11px;color:rgba(255,255,255,.35);}
+.btn-nota{background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);border-radius:6px;padding:2px 9px;font-size:11px;}
+.nota-edit{display:flex;gap:5px;width:100%;margin-top:6px;}
+.nota-edit input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(0,111,166,.5);border-radius:7px;padding:5px 9px;color:#fff;font-size:12px;outline:none;}
+.nota-save{background:#006fa6;border:none;border-radius:7px;padding:5px 11px;color:#fff;font-size:12px;}
+.nota-cancel{background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:5px 11px;color:rgba(255,255,255,.4);font-size:12px;}
+.nota-display{margin-top:7px;padding:7px 9px;border-radius:7px;background:rgba(0,111,166,.12);border:1px solid rgba(0,111,166,.28);color:#a8d4e8;font-size:12px;}
+
+/* ── Comentarios ── */
+#comentarios-wrap{border-radius:13px;border:1px solid rgba(0,111,166,.3);background:rgba(0,111,166,.05);margin-bottom:14px;overflow:hidden;}
+#comentarios-header{padding:11px 15px 7px;border-bottom:1px solid rgba(0,111,166,.15);}
+#comentarios-header p{font-size:13px;font-weight:600;color:#7fb3c8;}
+#comentarios-header small{font-size:11px;color:rgba(255,255,255,.3);}
+#comentarios-ta{width:100%;min-height:110px;background:transparent;border:none;outline:none;color:#e8f4f8;font-size:13px;line-height:1.7;padding:11px 15px;}
+
+/* ── Completed banner ── */
+#done-banner{border-radius:13px;padding:18px;text-align:center;background:linear-gradient(135deg,rgba(46,125,50,.18),rgba(46,125,50,.04));border:1px solid rgba(46,125,50,.35);margin-bottom:14px;}
+#done-banner p{font-size:14px;font-weight:700;color:#4caf50;}
+#done-banner small{font-size:12px;color:rgba(255,255,255,.4);}
+
+/* ── History ── */
+#history-wrap{border-radius:13px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);padding:15px;margin-bottom:14px;}
+.hist-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.hist-km{background:rgba(0,111,166,.15);border:1px solid rgba(0,111,166,.35);border-radius:7px;padding:3px 10px;color:#00b4d8;font-size:12px;font-weight:700;cursor:pointer;}
+.hist-bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden;}
+.hist-fill{height:100%;border-radius:2px;}
+.hist-count{font-size:11px;color:rgba(255,255,255,.4);}
+
+/* ── Ring SVG ── */
+.ring{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.1);}
+.ring-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset .5s ease;}
+.ring-text{font-size:10px;fill:#fff;transform-origin:center;transform:rotate(90deg);}
+
+/* ── Empty state ── */
+#empty{text-align:center;padding:60px 20px;color:rgba(255,255,255,.25);}
+#empty .ico{font-size:46px;margin-bottom:14px;}
+#empty p{font-size:13px;letter-spacing:.5px;}
+
+/* ── Footer ── */
+#footer{margin-top:28px;padding-top:14px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;}
+#footer span{font-size:10px;color:rgba(255,255,255,.18);}
+
+/* ── Drive folder info banner ── */
+#folder-info{background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.25);border-radius:9px;padding:8px 13px;margin-top:8px;display:flex;align-items:center;gap:8px;}
+#folder-info p{font-size:12px;color:#81c784;}
+#folder-info small{font-size:11px;color:rgba(255,255,255,.35);}
+
+@media print {
+  body{background:#fff !important;color:#000 !important;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .no-print{display:none !important;}
+  #app{padding:0;}
+  .sis-body{display:block !important;}
+  .task-detail{display:block !important;}
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
+<div id="app">
 
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <!-- HEADER -->
+  <div id="header" class="no-print">
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div class="row" style="gap:8px;">
+          <div style="width:5px;height:26px;border-radius:3px;background:linear-gradient(180deg,#006fa6,#1a3a4a);flex-shrink:0;"></div>
+          <h1>VOLVO XC90 D5</h1>
+        </div>
+        <p style="padding-left:13px;">Plan de mantenimiento · 2019 · AWD · 235 CV Diesel</p>
+      </div>
+      <div id="mat-area"></div>
+    </div>
+  </div>
 
-  <script type="text/babel" data-presets="react">
-const { useState, useEffect, useCallback, useRef } = React;
+  <!-- AUTH BAR -->
+  <div id="auth-bar" class="out no-print">
+    <div class="col">
+      <span class="auth-label" style="color:#7fb3c8;">☁️ Sincronización Google Drive</span>
+      <span class="auth-sub" id="auth-sub">Datos guardados localmente · Inicia sesión para sincronizar</span>
+    </div>
+    <div id="auth-actions"></div>
+  </div>
 
-import { useState, useEffect, useCallback } from "react";
+  <!-- DRIVE FOLDER INFO (hidden until logged in) -->
+  <div id="folder-info" style="display:none;" class="no-print">
+    <span style="font-size:16px;">📁</span>
+    <div>
+      <p>Datos guardados en <strong>Mi unidad / XC90 Mantenimiento /</strong></p>
+      <small>Archivo: xc90_data.json · Puedes hacer backup desde Google Drive</small>
+    </div>
+  </div>
 
-/* ─── DATOS ──────────────────────────────────────────────────────────────── */
-const SISTEMAS = [
-  { id:"prev",  label:"Preventivo",       icon:"🛢",  color:"#2E7D32", light:"#E8F5E9" },
-  { id:"motor", label:"Motor / Mecánico", icon:"⚙️",  color:"#C62828", light:"#FFEBEE" },
-  { id:"trans", label:"Transmisión",      icon:"🔩",  color:"#6A1B9A", light:"#F3E5F5" },
-  { id:"fren",  label:"Frenos",           icon:"🔴",  color:"#E65100", light:"#FFF3E0" },
-  { id:"susp",  label:"Suspensión",       icon:"🔧",  color:"#00695C", light:"#E0F2F1" },
-  { id:"elec",  label:"Eléctrico",        icon:"⚡",  color:"#B8860B", light:"#FFFDE7" },
-  { id:"clim",  label:"Climatización",    icon:"❄️",  color:"#0277BD", light:"#E1F5FE" },
-  { id:"carr",  label:"Carrocería",       icon:"🚗",  color:"#4E342E", light:"#EFEBE9" },
-  { id:"neum",  label:"Neumáticos",       icon:"⭕",  color:"#37474F", light:"#ECEFF1" },
-];
+  <!-- KM SELECTOR -->
+  <div id="km-wrap" class="no-print">
+    <span id="km-label">KM actuales</span>
+    <select id="km-select">
+      <option value="0">— seleccionar —</option>
+    </select>
+  </div>
 
+  <!-- MAIN CONTENT -->
+  <div id="main"></div>
+
+</div>
+
+<script>
+'use strict';
+
+/* ══════════════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════════════ */
 const TAREAS = [
-  { id:"p01", sis:"prev",  nombre:"Aceite motor + filtro (ACEA C3 / VCC RBS0-2AE)",       intervalo:1,   prio:"CRÍTICO",     nota:"Castrol Edge Prof. V 0W-30 / Ravenol VMP 5W-30. Cap. ≈ 6,5 L" },
-  { id:"p02", sis:"prev",  nombre:"Líquido lavaparabrisas (nivel + concentrado)",          intervalo:1,   prio:"OPCIONAL",    nota:"Concentrado anticongelante -20 °C. No usar agua sola" },
-  { id:"p03", sis:"prev",  nombre:"Presión neumáticos (revisar en frío)",                  intervalo:1,   prio:"CRÍTICO",     nota:"2,5 bar vacío / 2,8 bar carga — siempre en frío" },
-  { id:"p04", sis:"prev",  nombre:"Filtro de habitáculo (carbón activo doble)",             intervalo:1.5, prio:"RECOMENDADO", nota:"Cada 15 000 km. Sustituir antes si hay olor o polvo visible" },
-  { id:"p05", sis:"prev",  nombre:"Sistema SCR / AdBlue (nivel + calidad)",                intervalo:1.5, prio:"RECOMENDADO", nota:"Rellenar según testigo. ISO 22241. ≈ 1 L/1 500 km" },
-  { id:"p06", sis:"prev",  nombre:"Filtro de aire motor",                                  intervalo:2,   prio:"RECOMENDADO", nota:"Cada 20 000 km. Limpiar carcasa con compresor antes" },
-  { id:"p07", sis:"prev",  nombre:"Líquido de frenos DOT 4+ LV",                           intervalo:3,   prio:"CRÍTICO",     nota:"Cada 30 000 km o 2 años. Punto ebullición mín. 250 °C" },
-  { id:"p08", sis:"prev",  nombre:"Filtro de combustible diesel",                           intervalo:3,   prio:"CRÍTICO",     nota:"Drenar agua del separador. Precaución presión rail" },
-  { id:"p09", sis:"prev",  nombre:"Diferencial delantero (aceite SAE 75W-90)",             intervalo:8,   prio:"RECOMENDADO", nota:"Volvo 1161540 o equiv. GL-5. Cap. ≈ 0,8 L" },
-  { id:"p10", sis:"prev",  nombre:"Diferencial trasero / transfer (aceite)",               intervalo:8,   prio:"RECOMENDADO", nota:"SAE 75W-90 GL-5. Cap. ≈ 1 L. Aprovechar revisión Haldex" },
-  { id:"p11", sis:"prev",  nombre:"Transmisión automática Geartronic – aceite ATF",        intervalo:6,   prio:"CRÍTICO",     nota:"ATF Volvo 1161521 o Dexron VI. ≈ 7 L lavado completo" },
-  { id:"p12", sis:"prev",  nombre:"Bujías de incandescencia (precalentamiento diesel)",    intervalo:8,   prio:"RECOMENDADO", nota:"OEM Bosch / NGK. Cambiar en juego de 4" },
-  { id:"p13", sis:"prev",  nombre:"Correa distribución seca + tensores + bomba agua",      intervalo:15,  prio:"CRÍTICO",     nota:"150 000 km / 10 años. Incluir SIEMPRE bomba de agua + tensor + rodillo" },
-  { id:"p14", sis:"prev",  nombre:"Líquido refrigerante Volvo VCS amarillo (31439721)",    intervalo:15,  prio:"CRÍTICO",     nota:"SOLO Volvo VCS amarillo. NO mezclar con G13 violeta. Tras primer cambio: cada 5 años" },
-  { id:"m01", sis:"motor", nombre:"Inspección general motor (fugas, manguitos)",           intervalo:2,   prio:"RECOMENDADO", nota:"Fugas habituales: turbo, tapa válvulas, cárter. Revisar manguitos" },
-  { id:"m02", sis:"motor", nombre:"Sistema PCV / ventilación cárter (limpieza)",           intervalo:6,   prio:"RECOMENDADO", nota:"Fallo habitual D5: separador aceite obstruido → consumo aceite" },
-  { id:"m03", sis:"motor", nombre:"Turbocompresor (juego axial/radial + actuador VGT)",    intervalo:6,   prio:"CRÍTICO",     nota:"Juego axial máx. 0,15 mm. Síntoma fallo: humo azul o P0299" },
-  { id:"m04", sis:"motor", nombre:"Correa serpentina auxiliar + tensor + rodillo",         intervalo:8,   prio:"RECOMENDADO", nota:"Inspección grietas cada 40k. Sustitución preventiva a 80k" },
-  { id:"m05", sis:"motor", nombre:"EGR válvula + enfriador – limpieza/sustitución",        intervalo:8,   prio:"CRÍTICO",     nota:"Punto más crítico del D5. Descarbonizar a 80k" },
-  { id:"m06", sis:"motor", nombre:"DPF – control contrapresión / regeneración activa",     intervalo:4,   prio:"CRÍTICO",     nota:"Contrapresión límite: > 80 mbar en ralentí. Regenerar si luz ámbar" },
-  { id:"m07", sis:"motor", nombre:"Bomba de agua (sustitución preventiva)",                intervalo:12,  prio:"CRÍTICO",     nota:"Sustituir junto a correa a 120k. Fallo = sobrecalentamiento grave" },
-  { id:"m08", sis:"motor", nombre:"Limpieza profunda EGR + colector admisión",             intervalo:12,  prio:"CRÍTICO",     nota:"A 120k hollín puede reducir sección >40%. Limpiar con decapante" },
-  { id:"m09", sis:"motor", nombre:"Bomba de alta presión (presión rail / sellos)",         intervalo:10,  prio:"CRÍTICO",     nota:"Presión rail > 1 600 bar en aceleración. Síntoma: humo blanco" },
-  { id:"m10", sis:"motor", nombre:"Inyectores diesel (equilibrado / test retorno)",        intervalo:10,  prio:"CRÍTICO",     nota:"Test caudal retorno; límite 25 cc/min. Limpiar ultrasonidos" },
-  { id:"m11", sis:"motor", nombre:"Sistema refrigeración – radiador + termostato",         intervalo:10,  prio:"RECOMENDADO", nota:"Limpiar aletas radiador. Revisar bomba eléctrica auxiliar" },
-  { id:"m12", sis:"motor", nombre:"Junta culata (análisis gases refrigerante)",            intervalo:10,  prio:"CRÍTICO",     nota:"Analizador combustión en tapón radiador. Síntomas: calentamiento" },
-  { id:"m13", sis:"motor", nombre:"DPF – limpieza profesional (lavado a presión)",         intervalo:18,  prio:"CRÍTICO",     nota:"A 180-220k ceniza residual no se elimina con regeneración" },
-  { id:"m14", sis:"motor", nombre:"Actuador turbo VGT (revisión/limpieza específica)",     intervalo:15,  prio:"RECOMENDADO", nota:"Limpiar álabes. Código P0299 = fallo. Sustitución: 800-1500€" },
-  { id:"t01", sis:"trans", nombre:"Geartronic (inspección fugas + selectividad)",          intervalo:2,   prio:"RECOMENDADO", nota:"Juntas, retenes y palier. Fugas incipientes en selector" },
-  { id:"t02", sis:"trans", nombre:"Haldex Gen5 – aceite + limpieza bomba + malla",         intervalo:3,   prio:"CRÍTICO",     nota:"CRÍTICO AWD. Aceite Volvo 31367940. Limpiar bomba + malla SIEMPRE" },
-  { id:"t03", sis:"trans", nombre:"Semieje delantero (fuelle / junta homocinética)",       intervalo:4,   prio:"RECOMENDADO", nota:"Sustituir fuelle si grietas. No demorar: contaminación = eje completo" },
-  { id:"t04", sis:"trans", nombre:"Cardán trasero (crucetas + acoplamientos)",             intervalo:6,   prio:"RECOMENDADO", nota:"Engrasar crucetas. Revisar equilibrado y goma central" },
-  { id:"t05", sis:"trans", nombre:"Transfer / caja transferencia (inspección)",            intervalo:6,   prio:"RECOMENDADO", nota:"Fugas en retenes. Ruido al 4x4 = rodamientos internos" },
-  { id:"f01", sis:"fren",  nombre:"Pastillas freno delanteras (medición)",                 intervalo:2,   prio:"CRÍTICO",     nota:"Sustituir si < 3 mm. Limpiar pistón y guías caliper" },
-  { id:"f02", sis:"fren",  nombre:"Pastillas freno traseras (medición)",                   intervalo:2,   prio:"CRÍTICO",     nota:"Caliper trasero: retracción por giro (NO presión directa). Herramienta EPB" },
-  { id:"f03", sis:"fren",  nombre:"Discos freno delanteros (espesor / runout)",            intervalo:4,   prio:"CRÍTICO",     nota:"Mín. 28 mm (origen 30 mm). Runout máx. 0,07 mm. Sustituir en par" },
-  { id:"f04", sis:"fren",  nombre:"EPB – calibración freno estacionamiento eléctrico",     intervalo:4,   prio:"RECOMENDADO", nota:"Calibrar con VIDA/DICE SIEMPRE tras cambiar pastillas traseras" },
-  { id:"f05", sis:"fren",  nombre:"Manguitos de freno (inspección / sustitución)",         intervalo:4,   prio:"RECOMENDADO", nota:"Buscar burbujas, grietas. Sustituir a 100k o 10 años" },
-  { id:"f06", sis:"fren",  nombre:"Discos freno traseros (espesor / runout)",              intervalo:6,   prio:"CRÍTICO",     nota:"Mín. 18 mm (origen 20 mm). Sustituir si surcos o runout" },
-  { id:"s01", sis:"susp",  nombre:"Geometría – alineación 4 ruedas + convergencia",        intervalo:2,   prio:"RECOMENDADO", nota:"Realizar tras cambio neumáticos, brazos o golpe fuerte" },
-  { id:"s02", sis:"susp",  nombre:"Amortiguadores Four-C activos (inspección elec.)",      intervalo:4,   prio:"CRÍTICO",     nota:"Comprobar módulo Four-C con VIDA. Fugas aceite = sustitución" },
-  { id:"s03", sis:"susp",  nombre:"Rótulas y brazos de suspensión (holguras)",             intervalo:4,   prio:"CRÍTICO",     nota:"Usar comparador. Holgura > 1 mm = sustitución. Brazos aluminio: grietas" },
-  { id:"s04", sis:"susp",  nombre:"Rodamientos de rueda (holgura axial/radial)",           intervalo:6,   prio:"CRÍTICO",     nota:"Agitar rueda en aspa. Ruido grave en curva = rodamiento trasero" },
-  { id:"s05", sis:"susp",  nombre:"Barra estabilizadora + silentblocks + endlinks",        intervalo:6,   prio:"RECOMENDADO", nota:"Crujido en curva = silentblock. Endlinks: fallos frecuentes a 80-100k" },
-  { id:"s06", sis:"susp",  nombre:"Dirección EPAS (par + rectitud + DTC)",                 intervalo:6,   prio:"RECOMENDADO", nota:"Sin aceite hidráulico. Comprobar par con VIDA" },
-  { id:"s07", sis:"susp",  nombre:"Cubiertas polvo cremallera dirección",                  intervalo:8,   prio:"RECOMENDADO", nota:"Si rota → contaminación → daño cremallera" },
-  { id:"e01", sis:"elec",  nombre:"Sensores ABS/ESP (limpieza + señal)",                   intervalo:2,   prio:"RECOMENDADO", nota:"Limpiar con compresor. Verificar señal senoidal con osciloscopio" },
-  { id:"e02", sis:"elec",  nombre:"Luces LED/Xenón (alineación + limpieza lentes)",        intervalo:2,   prio:"RECOMENDADO", nota:"Verificar ángulo con pantalla. Comprobar balastos xenón" },
-  { id:"e03", sis:"elec",  nombre:"Batería principal 12V AGM (test SOH)",                  intervalo:2,   prio:"CRÍTICO",     nota:"AGM 80 Ah / 800 A CCA. Reemplazar si SOH < 70% o > 5 años" },
-  { id:"e04", sis:"elec",  nombre:"ECU motor – actualización software VIDA",               intervalo:4,   prio:"OPCIONAL",    nota:"Consultar TSB Volvo" },
-  { id:"e05", sis:"elec",  nombre:"Batería auxiliar 12V (test / sustitución)",             intervalo:4,   prio:"CRÍTICO",     nota:"Bajo tapa trasera. Síntoma: Start-Stop errático y radio" },
-  { id:"e06", sis:"elec",  nombre:"Sensus – actualización mapas y firmware",               intervalo:4,   prio:"OPCIONAL",    nota:"Descargar desde volvocarservice.com" },
-  { id:"e07", sis:"elec",  nombre:"Cableado y conectores (zona turbo + paso rueda)",       intervalo:6,   prio:"RECOMENDADO", nota:"Calor del turbo degrada aislante. Revisar conectores sensor MAP" },
-  { id:"e08", sis:"elec",  nombre:"Alternador (tensión regulación 13,8–14,5 V)",           intervalo:6,   prio:"RECOMENDADO", nota:"Picos de tensión = diodo fallo. Medir con osciloscopio" },
-  { id:"e09", sis:"elec",  nombre:"Sistema sensor NOx / sonda lambda / módulo SCR",        intervalo:6,   prio:"CRÍTICO",     nota:"Fallo = modo limp-home inmediato. Vida útil 150-200k" },
-  { id:"e10", sis:"elec",  nombre:"Motor de arranque (solenoide + escobillas)",            intervalo:8,   prio:"RECOMENDADO", nota:"Síntoma: giro lento o clic. Comprobar solenoide" },
-  { id:"c01", sis:"clim",  nombre:"Filtro habitáculo A/C (revisión adicional)",            intervalo:1.5, prio:"RECOMENDADO", nota:"Revisar olor a musgo. Limpieza antibacteriana" },
-  { id:"c02", sis:"clim",  nombre:"Gas refrigerante A/C R-134a (carga + fugas)",           intervalo:4,   prio:"RECOMENDADO", nota:"Carga ≈ 700 g. Detectar fugas con tinte UV" },
-  { id:"c03", sis:"clim",  nombre:"Evaporador + drenaje (limpieza antibacteriana)",        intervalo:4,   prio:"RECOMENDADO", nota:"Spray antibacteriano. Despejar tubo drenaje" },
-  { id:"c04", sis:"clim",  nombre:"Calefacción auxiliar Webasto/Eberspächer",              intervalo:4,   prio:"OPCIONAL",    nota:"Si equipado: limpiar bujía y filtro combustible" },
-  { id:"ca01",sis:"carr",  nombre:"Limpiaparabrisas (escobillas + brazos)",                intervalo:2,   prio:"RECOMENDADO", nota:"Sustituir cada 20k o anualmente" },
-  { id:"ca02",sis:"carr",  nombre:"Drenajes techo panorámico (limpieza con varilla)",      intervalo:2,   prio:"CRÍTICO",     nota:"Fallo MUY típico XC90. Obstrucción → agua en habitáculo" },
-  { id:"ca03",sis:"carr",  nombre:"Inspección visual pintura / óxidos incipientes",        intervalo:2,   prio:"RECOMENDADO", nota:"Crítico: arcos paso rueda y borde puertas" },
-  { id:"ca04",sis:"carr",  nombre:"Sellado juntas puertas / techo panorámico",             intervalo:2,   prio:"RECOMENDADO", nota:"Limpiar raíles techo. Silicona neutra en juntas resecas" },
-  { id:"ca05",sis:"carr",  nombre:"Protección anticorrosión bajos / pasos rueda",          intervalo:4,   prio:"RECOMENDADO", nota:"Cera Dinitrol o Noxudol" },
-  { id:"n01", sis:"neum",  nombre:"Profundidad dibujo (medición 4 puntos por rueda)",      intervalo:1,   prio:"CRÍTICO",     nota:"Legal > 1,6 mm. Sustituir < 3 mm para lluvia" },
-  { id:"n02", sis:"neum",  nombre:"Rotación neumáticos (delantero ↔ trasero)",            intervalo:2,   prio:"RECOMENDADO", nota:"Patrón cruzado si no direccionales. Equilibrar" },
-  { id:"n03", sis:"neum",  nombre:"Equilibrado de ruedas",                                 intervalo:2,   prio:"RECOMENDADO", nota:"Vibración al volante > 100 km/h = desequilibrio" },
-  { id:"n04", sis:"neum",  nombre:"Sensores TPMS (batería + calibración)",                 intervalo:4,   prio:"RECOMENDADO", nota:"Batería sensor ≈ 7 años. Recalibrar con VIDA" },
-  { id:"n05", sis:"neum",  nombre:"Sustitución neumáticos (desgaste / edad)",              intervalo:5,   prio:"CRÍTICO",     nota:"Máx. 6 años independiente del dibujo. OEM: 235/60 R18 o 255/50 R19" },
+  {id:"p01",sis:"prev",nombre:'Aceite motor + filtro (ACEA C3 / VCC RBS0-2AE)',intervalo:1,prio:"CRITICO",nota:'Castrol Edge Prof. V 0W-30 / Ravenol VMP 5W-30. Cap. ≈ 6,5 L'},
+  {id:"p02",sis:"prev",nombre:'Líquido lavaparabrisas (nivel + concentrado)',intervalo:1,prio:"OPCIONAL",nota:'Concentrado anticongelante -20 °C. No usar agua sola'},
+  {id:"p03",sis:"prev",nombre:'Presión neumáticos (revisar en frío)',intervalo:1,prio:"CRITICO",nota:'2,5 bar vacío / 2,8 bar carga — siempre en frío'},
+  {id:"p04",sis:"prev",nombre:'Filtro de habitáculo (carbón activo doble)',intervalo:1.5,prio:"RECOMENDADO",nota:'Cada 15 000 km. Sustituir antes si hay olor o polvo'},
+  {id:"p05",sis:"prev",nombre:'Sistema SCR / AdBlue (nivel + calidad)',intervalo:1.5,prio:"RECOMENDADO",nota:'Rellenar según testigo. ISO 22241. ≈ 1 L/1 500 km'},
+  {id:"p06",sis:"prev",nombre:'Filtro de aire motor',intervalo:2,prio:"RECOMENDADO",nota:'Cada 20 000 km. Limpiar carcasa con compresor antes'},
+  {id:"p07",sis:"prev",nombre:'Líquido de frenos DOT 4+ LV',intervalo:3,prio:"CRITICO",nota:'Cada 30 000 km o 2 años. Punto ebullición mín. 250 °C'},
+  {id:"p08",sis:"prev",nombre:'Filtro de combustible diesel',intervalo:3,prio:"CRITICO",nota:'Drenar agua del separador. Precaución presión rail'},
+  {id:"p09",sis:"prev",nombre:'Diferencial delantero (aceite SAE 75W-90)',intervalo:8,prio:"RECOMENDADO",nota:'Volvo 1161540 o equiv. GL-5. Cap. ≈ 0,8 L'},
+  {id:"p10",sis:"prev",nombre:'Diferencial trasero / transfer (aceite)',intervalo:8,prio:"RECOMENDADO",nota:'SAE 75W-90 GL-5. Cap. ≈ 1 L. Aprovechar revisión Haldex'},
+  {id:"p11",sis:"prev",nombre:'Transmisión automática Geartronic – aceite ATF',intervalo:6,prio:"CRITICO",nota:'ATF Volvo 1161521 o Dexron VI. ≈ 7 L lavado completo'},
+  {id:"p12",sis:"prev",nombre:'Bujías de incandescencia (precalentamiento diesel)',intervalo:8,prio:"RECOMENDADO",nota:'OEM Bosch / NGK. Cambiar en juego de 4'},
+  {id:"p13",sis:"prev",nombre:'Correa distribución seca + tensores + bomba agua',intervalo:15,prio:"CRITICO",nota:'150 000 km / 10 años. Incluir SIEMPRE bomba + tensor + rodillo'},
+  {id:"p14",sis:"prev",nombre:'Líquido refrigerante Volvo VCS amarillo (31439721)',intervalo:15,prio:"CRITICO",nota:'SOLO VCS amarillo. NO mezclar con G13 violeta. Tras primer cambio: cada 5 años'},
+  {id:"m01",sis:"motor",nombre:'Inspección general motor (fugas, manguitos)',intervalo:2,prio:"RECOMENDADO",nota:'Fugas habituales: turbo, tapa válvulas, cárter'},
+  {id:"m02",sis:"motor",nombre:'Sistema PCV / ventilación cárter (limpieza)',intervalo:6,prio:"RECOMENDADO",nota:'Fallo habitual D5: separador aceite obstruido → consumo aceite'},
+  {id:"m03",sis:"motor",nombre:'Turbocompresor (juego axial/radial + actuador VGT)',intervalo:6,prio:"CRITICO",nota:'Juego axial máx. 0,15 mm. Síntoma fallo: humo azul o P0299'},
+  {id:"m04",sis:"motor",nombre:'Correa serpentina auxiliar + tensor + rodillo',intervalo:8,prio:"RECOMENDADO",nota:'Inspección grietas cada 40k. Sustitución preventiva a 80k'},
+  {id:"m05",sis:"motor",nombre:'EGR válvula + enfriador – limpieza/sustitución',intervalo:8,prio:"CRITICO",nota:'Punto más crítico del D5. Descarbonizar a 80k'},
+  {id:"m06",sis:"motor",nombre:'DPF – control contrapresión / regeneración activa',intervalo:4,prio:"CRITICO",nota:'Contrapresión límite: > 80 mbar en ralentí. Regenerar si luz ámbar'},
+  {id:"m07",sis:"motor",nombre:'Bomba de agua (sustitución preventiva)',intervalo:12,prio:"CRITICO",nota:'Sustituir junto a correa a 120k. Fallo = sobrecalentamiento grave'},
+  {id:"m08",sis:"motor",nombre:'Limpieza profunda EGR + colector admisión',intervalo:12,prio:"CRITICO",nota:'A 120k hollín puede reducir sección >40%. Limpiar con decapante'},
+  {id:"m09",sis:"motor",nombre:'Bomba de alta presión (presión rail / sellos)',intervalo:10,prio:"CRITICO",nota:'Presión rail > 1 600 bar en aceleración. Síntoma: humo blanco'},
+  {id:"m10",sis:"motor",nombre:'Inyectores diesel (equilibrado / test retorno)',intervalo:10,prio:"CRITICO",nota:'Test caudal retorno; límite 25 cc/min. Limpiar ultrasonidos'},
+  {id:"m11",sis:"motor",nombre:'Sistema refrigeración – radiador + termostato',intervalo:10,prio:"RECOMENDADO",nota:'Limpiar aletas radiador. Revisar bomba eléctrica auxiliar'},
+  {id:"m12",sis:"motor",nombre:'Junta culata (análisis gases refrigerante)',intervalo:10,prio:"CRITICO",nota:'Analizador combustión en tapón radiador. Síntomas: calentamiento'},
+  {id:"m13",sis:"motor",nombre:'DPF – limpieza profesional (lavado a presión)',intervalo:18,prio:"CRITICO",nota:'A 180-220k ceniza residual no se elimina con regeneración'},
+  {id:"m14",sis:"motor",nombre:'Actuador turbo VGT (revisión/limpieza específica)',intervalo:15,prio:"RECOMENDADO",nota:'Limpiar álabes. Código P0299 = fallo. Sustitución: 800-1500 €'},
+  {id:"t01",sis:"trans",nombre:'Geartronic (inspección fugas + selectividad)',intervalo:2,prio:"RECOMENDADO",nota:'Juntas, retenes y palier. Fugas incipientes en selector'},
+  {id:"t02",sis:"trans",nombre:'Haldex Gen5 – aceite + limpieza bomba + malla',intervalo:3,prio:"CRITICO",nota:'CRÍTICO AWD. Aceite Volvo 31367940. Limpiar bomba + malla SIEMPRE'},
+  {id:"t03",sis:"trans",nombre:'Semieje delantero (fuelle / junta homocinética)',intervalo:4,prio:"RECOMENDADO",nota:'Sustituir fuelle si grietas. No demorar: contaminación = eje completo'},
+  {id:"t04",sis:"trans",nombre:'Cardán trasero (crucetas + acoplamientos)',intervalo:6,prio:"RECOMENDADO",nota:'Engrasar crucetas. Revisar equilibrado y goma central'},
+  {id:"t05",sis:"trans",nombre:'Transfer / caja transferencia (inspección)',intervalo:6,prio:"RECOMENDADO",nota:'Fugas en retenes. Ruido al 4x4 = rodamientos internos'},
+  {id:"f01",sis:"fren",nombre:'Pastillas freno delanteras (medición)',intervalo:2,prio:"CRITICO",nota:'Sustituir si < 3 mm. Limpiar pistón y guías caliper'},
+  {id:"f02",sis:"fren",nombre:'Pastillas freno traseras (medición)',intervalo:2,prio:"CRITICO",nota:'Caliper trasero: retracción por giro (NO presión directa). Herramienta EPB'},
+  {id:"f03",sis:"fren",nombre:'Discos freno delanteros (espesor / runout)',intervalo:4,prio:"CRITICO",nota:'Mín. 28 mm (origen 30 mm). Runout máx. 0,07 mm. Sustituir en par'},
+  {id:"f04",sis:"fren",nombre:'EPB – calibración freno estacionamiento eléctrico',intervalo:4,prio:"RECOMENDADO",nota:'Calibrar con VIDA/DICE SIEMPRE tras cambiar pastillas traseras'},
+  {id:"f05",sis:"fren",nombre:'Manguitos de freno (inspección / sustitución)',intervalo:4,prio:"RECOMENDADO",nota:'Buscar burbujas, grietas. Sustituir a 100k o 10 años'},
+  {id:"f06",sis:"fren",nombre:'Discos freno traseros (espesor / runout)',intervalo:6,prio:"CRITICO",nota:'Mín. 18 mm (origen 20 mm). Sustituir si surcos o runout'},
+  {id:"s01",sis:"susp",nombre:'Geometría – alineación 4 ruedas + convergencia',intervalo:2,prio:"RECOMENDADO",nota:'Realizar tras cambio neumáticos, brazos o golpe fuerte'},
+  {id:"s02",sis:"susp",nombre:'Amortiguadores Four-C activos (inspección elec.)',intervalo:4,prio:"CRITICO",nota:'Comprobar módulo Four-C con VIDA. Fugas aceite = sustitución'},
+  {id:"s03",sis:"susp",nombre:'Rótulas y brazos de suspensión (holguras)',intervalo:4,prio:"CRITICO",nota:'Usar comparador. Holgura > 1 mm = sustitución. Brazos aluminio: grietas'},
+  {id:"s04",sis:"susp",nombre:'Rodamientos de rueda (holgura axial/radial)',intervalo:6,prio:"CRITICO",nota:'Agitar rueda en aspa. Ruido grave en curva = rodamiento trasero'},
+  {id:"s05",sis:"susp",nombre:'Barra estabilizadora + silentblocks + endlinks',intervalo:6,prio:"RECOMENDADO",nota:'Crujido en curva = silentblock. Endlinks: fallos frecuentes a 80-100k'},
+  {id:"s06",sis:"susp",nombre:'Dirección EPAS (par + rectitud + DTC)',intervalo:6,prio:"RECOMENDADO",nota:'Sin aceite hidráulico. Comprobar par con VIDA'},
+  {id:"s07",sis:"susp",nombre:'Cubiertas polvo cremallera dirección',intervalo:8,prio:"RECOMENDADO",nota:'Si rota → contaminación → daño cremallera'},
+  {id:"e01",sis:"elec",nombre:'Sensores ABS/ESP (limpieza + señal)',intervalo:2,prio:"RECOMENDADO",nota:'Limpiar con compresor. Verificar señal senoidal con osciloscopio'},
+  {id:"e02",sis:"elec",nombre:'Luces LED/Xenón (alineación + limpieza lentes)',intervalo:2,prio:"RECOMENDADO",nota:'Verificar ángulo con pantalla. Comprobar balastos xenón'},
+  {id:"e03",sis:"elec",nombre:'Batería principal 12V AGM (test SOH)',intervalo:2,prio:"CRITICO",nota:'AGM 80 Ah / 800 A CCA. Reemplazar si SOH < 70% o > 5 años'},
+  {id:"e04",sis:"elec",nombre:'ECU motor – actualización software VIDA',intervalo:4,prio:"OPCIONAL",nota:'Consultar TSB Volvo. Puede mejorar consumo y respuesta'},
+  {id:"e05",sis:"elec",nombre:'Batería auxiliar 12V (test / sustitución)',intervalo:4,prio:"CRITICO",nota:'Bajo tapa trasera. Síntoma: Start-Stop errático y radio'},
+  {id:"e06",sis:"elec",nombre:'Sensus – actualización mapas y firmware',intervalo:4,prio:"OPCIONAL",nota:'Descargar desde volvocarservice.com'},
+  {id:"e07",sis:"elec",nombre:'Cableado y conectores (zona turbo + paso rueda)',intervalo:6,prio:"RECOMENDADO",nota:'Calor del turbo degrada aislante. Revisar conectores sensor MAP'},
+  {id:"e08",sis:"elec",nombre:'Alternador (tensión regulación 13,8–14,5 V)',intervalo:6,prio:"RECOMENDADO",nota:'Picos de tensión = diodo fallo. Medir con osciloscopio'},
+  {id:"e09",sis:"elec",nombre:'Sistema sensor NOx / sonda lambda / módulo SCR',intervalo:6,prio:"CRITICO",nota:'Fallo = modo limp-home inmediato. Vida útil sensor NOx: 150-200k'},
+  {id:"e10",sis:"elec",nombre:'Motor de arranque (solenoide + escobillas)',intervalo:8,prio:"RECOMENDADO",nota:'Síntoma: giro lento o clic. Comprobar solenoide'},
+  {id:"c01",sis:"clim",nombre:'Filtro habitáculo A/C (revisión adicional)',intervalo:1.5,prio:"RECOMENDADO",nota:'Revisar olor a musgo. Limpieza antibacteriana si necesario'},
+  {id:"c02",sis:"clim",nombre:'Gas refrigerante A/C R-134a (carga + fugas)',intervalo:4,prio:"RECOMENDADO",nota:'Carga ≈ 700 g. Detectar fugas con tinte UV'},
+  {id:"c03",sis:"clim",nombre:'Evaporador + drenaje (limpieza antibacteriana)',intervalo:4,prio:"RECOMENDADO",nota:'Spray antibacteriano. Despejar tubo drenaje'},
+  {id:"c04",sis:"clim",nombre:'Calefacción auxiliar Webasto/Eberspächer',intervalo:4,prio:"OPCIONAL",nota:'Si equipado: limpiar bujía y filtro combustible'},
+  {id:"ca01",sis:"carr",nombre:'Limpiaparabrisas (escobillas + brazos)',intervalo:2,prio:"RECOMENDADO",nota:'Sustituir cada 20k o anualmente'},
+  {id:"ca02",sis:"carr",nombre:'Drenajes techo panorámico (limpieza con varilla)',intervalo:2,prio:"CRITICO",nota:'Fallo MUY típico XC90. Obstrucción → agua en habitáculo'},
+  {id:"ca03",sis:"carr",nombre:'Inspección visual pintura / óxidos incipientes',intervalo:2,prio:"RECOMENDADO",nota:'Crítico: arcos paso rueda y borde puertas'},
+  {id:"ca04",sis:"carr",nombre:'Sellado juntas puertas / techo panorámico',intervalo:2,prio:"RECOMENDADO",nota:'Limpiar raíles techo. Silicona neutra en juntas resecas'},
+  {id:"ca05",sis:"carr",nombre:'Protección anticorrosión bajos / pasos rueda',intervalo:4,prio:"RECOMENDADO",nota:'Cera Dinitrol o Noxudol. Especialmente zonas soldadura'},
+  {id:"n01",sis:"neum",nombre:'Profundidad dibujo (medición 4 puntos por rueda)',intervalo:1,prio:"CRITICO",nota:'Legal > 1,6 mm. Sustituir < 3 mm para lluvia'},
+  {id:"n02",sis:"neum",nombre:'Rotación neumáticos (delantero ↔ trasero)',intervalo:2,prio:"RECOMENDADO",nota:'Patrón cruzado si no son direccionales. Equilibrar'},
+  {id:"n03",sis:"neum",nombre:'Equilibrado de ruedas',intervalo:2,prio:"RECOMENDADO",nota:'Vibración al volante > 100 km/h = desequilibrio'},
+  {id:"n04",sis:"neum",nombre:'Sensores TPMS (batería + calibración)',intervalo:4,prio:"RECOMENDADO",nota:'Batería sensor ≈ 7 años. Recalibrar con VIDA'},
+  {id:"n05",sis:"neum",nombre:'Sustitución neumáticos (desgaste / edad)',intervalo:5,prio:"CRITICO",nota:'Máx. 6 años independiente del dibujo. OEM: 235/60 R18 o 255/50 R19'},
 ];
 
-const PRIO_CFG = {
-  "CRÍTICO":     { color:"#C62828", bg:"#FFEBEE", label:"CRÍTICO" },
-  "RECOMENDADO": { color:"#E65100", bg:"#FFF3E0", label:"RECOMEND." },
-  "OPCIONAL":    { color:"#2E7D32", bg:"#E8F5E9", label:"OPCIONAL" },
+const SISTEMAS = [
+  {id:"prev",label:'Preventivo',color:"#1a6b2a",light:"#e8f5e9"},
+  {id:"motor",label:'Motor / Mecánico',color:"#b71c1c",light:"#ffebee"},
+  {id:"trans",label:'Transmisión',color:"#4a148c",light:"#f3e5f5"},
+  {id:"fren",label:'Frenos',color:"#bf360c",light:"#fbe9e7"},
+  {id:"susp",label:'Suspensión',color:"#004d40",light:"#e0f2f1"},
+  {id:"elec",label:'Eléctrico',color:"#7a5a00",light:"#fffde7"},
+  {id:"clim",label:'Climatización',color:"#01579b",light:"#e1f5fe"},
+  {id:"carr",label:'Carrocería',color:"#3e2723",light:"#efebe9"},
+  {id:"neum",label:'Neumáticos',color:"#263238",light:"#eceff1"},
+];
+
+
+const KM_STEPS = Array.from({length:50},(_,i)=>(i+1)*10000);
+function shouldDo(t,km){ return km%(t.intervalo*10000)===0; }
+
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+let STATE = {
+  km: 0,
+  matricula: '',
+  checks: {},   // { "30000": { p01:true, ... } }
+  notas: {},    // { "30000": { p01:"texto" } }
+  comentarios:{},// { "30000": "texto" }
+  expandedSis: {},
+  expandedTask: {},
+  filter: 'all',
+  showHistory: false,
+  authState: 'out',   // out | loading | in
+  syncState: null,    // null | saving | saved | error
+  editingMatricula: false,
+  editingNota: null,  // taskId or null
+  gsiReady: false,
 };
 
-const KM_STEPS = Array.from({ length:50 }, (_,i) => (i+1)*10000);
-function shouldDoAt(t, km) { return km % (t.intervalo * 10000) === 0; }
+/* ══════════════════════════════════════════════════════════
+   GOOGLE DRIVE
+══════════════════════════════════════════════════════════ */
+const CLIENT_ID   = '270446134512-88stntlo997hs1h64uos32rof3bd8lvo.apps.googleusercontent.com';
+const FOLDER_NAME = 'XC90 Mantenimiento';
+const FILE_NAME   = 'xc90_data.json';
+const SCOPES      = 'https://www.googleapis.com/auth/drive.file';
 
-
-
-
-/* ══════════════════════════════════════════════════════════════════════════
-   GOOGLE DRIVE SYNC
-   ══════════════════════════════════════════════════════════════════════════ */
-
-// ── Config ── REEMPLAZA con tu Client ID de Google Cloud Console ──────────
-const GOOGLE_CLIENT_ID = "270446134512-88stntlo997hs1h64uos32rof3bd8lvo.apps.googleusercontent.com";
-const SCOPES = "https://www.googleapis.com/auth/drive.appdata";
-const FILE_NAME = "xc90_mantenimiento_data.json";
-
-// ── Estado global de auth ─────────────────────────────────────────────────
+let _token    = null;
+let _fileId   = null;
+let _folderId = null;
 let _tokenClient = null;
-let _accessToken = null;
-let _driveFileId = null;  // ID del archivo en Drive (caché)
-let _saveTimer = null;    // debounce timer
+let _saveTimer   = null;
 
-function isAuthenticated() { return !!_accessToken; }
-
-// ── Inicializar Google Identity Services ──────────────────────────────────
-function initGoogleAuth(onReady) {
-  if (!window.google?.accounts?.oauth2) {
-    setTimeout(() => initGoogleAuth(onReady), 200);
-    return;
-  }
+function initGSI(){
+  if(!window.google?.accounts?.oauth2){ setTimeout(initGSI,300); return; }
   _tokenClient = window.google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
+    client_id: CLIENT_ID,
     scope: SCOPES,
-    callback: (resp) => {
-      if (resp.error) { console.error("Auth error:", resp); return; }
-      _accessToken = resp.access_token;
-      onReady && onReady();
+    callback: async(resp)=>{
+      if(resp.error){ setState({authState:'out'}); return; }
+      _token = resp.access_token;
+      setState({authState:'loading', syncState:null});
+      try{
+        await loadFromDrive();
+        setState({authState:'in'});
+        document.getElementById('folder-info').style.display='flex';
+      } catch(e){ console.error(e); setState({authState:'out'}); }
     }
   });
+  setState({gsiReady:true});
+}
+window.addEventListener('load',()=>setTimeout(initGSI,500));
+
+function doLogin(){
+  if(!_tokenClient) return;
+  setState({authState:'loading'});
+  _tokenClient.requestAccessToken({prompt:'consent'});
+}
+function doLogout(){
+  if(_token) window.google.accounts.oauth2.revoke(_token,()=>{});
+  _token=null; _fileId=null; _folderId=null;
+  document.getElementById('folder-info').style.display='none';
+  setState({authState:'out', syncState:null});
 }
 
-function requestLogin(callback) {
-  if (!_tokenClient) { alert("Google aún no está listo, espera un momento."); return; }
-  _tokenClient._callback_override = callback;
-  _tokenClient.callback = (resp) => {
-    if (resp.error) return;
-    _accessToken = resp.access_token;
-    callback && callback();
-  };
-  _tokenClient.requestAccessToken({ prompt: "consent" });
+async function driveReq(url,opts={}){
+  const r=await fetch(url,{...opts,headers:{
+    'Authorization':'Bearer '+_token,
+    ...(opts.headers||{})
+  }});
+  if(r.status===401){_token=null; throw new Error('TOKEN_EXPIRED');}
+  return r;
 }
 
-function logout() {
-  if (_accessToken) {
-    window.google.accounts.oauth2.revoke(_accessToken, () => {});
-  }
-  _accessToken = null;
-  _driveFileId = null;
-}
-
-// ── Drive API helpers ─────────────────────────────────────────────────────
-async function driveRequest(url, opts = {}) {
-  const res = await fetch(url, {
-    ...opts,
-    headers: {
-      "Authorization": "Bearer " + _accessToken,
-      "Content-Type": "application/json",
-      ...(opts.headers || {})
-    }
+async function getOrCreateFolder(){
+  if(_folderId) return _folderId;
+  // Search
+  const q=encodeURIComponent(`mimeType='application/vnd.google-apps.folder' and name='${FOLDER_NAME}' and trashed=false`);
+  const r=await driveReq(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)`);
+  const d=await r.json();
+  if(d.files&&d.files.length){_folderId=d.files[0].id; return _folderId;}
+  // Create
+  const cr=await driveReq('https://www.googleapis.com/drive/v3/files',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:FOLDER_NAME,mimeType:'application/vnd.google-apps.folder'})
   });
-  if (res.status === 401) { _accessToken = null; throw new Error("TOKEN_EXPIRED"); }
-  return res;
+  const cd=await cr.json();
+  _folderId=cd.id; return _folderId;
 }
 
-async function findDriveFile() {
-  if (_driveFileId) return _driveFileId;
-  const res = await driveRequest(
-    `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${FILE_NAME}'&fields=files(id,name)`
-  );
-  const data = await res.json();
-  if (data.files && data.files.length > 0) {
-    _driveFileId = data.files[0].id;
-    return _driveFileId;
-  }
+async function findFile(folderId){
+  if(_fileId) return _fileId;
+  const q=encodeURIComponent(`name='${FILE_NAME}' and '${folderId}' in parents and trashed=false`);
+  const r=await driveReq(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)`);
+  const d=await r.json();
+  if(d.files&&d.files.length){_fileId=d.files[0].id; return _fileId;}
   return null;
 }
 
-async function readDriveFile() {
-  const fileId = await findDriveFile();
-  if (!fileId) return null;
-  const res = await driveRequest(
-    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
-  );
-  if (!res.ok) return null;
-  return await res.json();
+async function loadFromDrive(){
+  const fid=await getOrCreateFolder();
+  const fileId=await findFile(fid);
+  if(!fileId) return; // first time, nothing to load
+  const r=await driveReq(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
+  if(!r.ok) return;
+  const data=await r.json();
+  // Merge into state
+  STATE.checks = data.checks||{};
+  STATE.notas  = data.notas||{};
+  STATE.comentarios = data.comentarios||{};
+  STATE.matricula = data.matricula||'';
+  STATE.km = data.km||0;
+  // sync to localStorage
+  lsSave();
 }
 
-async function writeDriveFile(data) {
-  const body = JSON.stringify(data);
-  const fileId = await findDriveFile();
-
-  if (fileId) {
-    // Update existing
-    await driveRequest(
-      `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-      { method: "PATCH", headers: { "Content-Type": "application/json" }, body }
-    );
-  } else {
-    // Create new in appDataFolder (hidden from user's Drive, only app can see it)
-    const meta = { name: FILE_NAME, parents: ["appDataFolder"] };
-    const form = new FormData();
-    form.append("metadata", new Blob([JSON.stringify(meta)], { type: "application/json" }));
-    form.append("file", new Blob([body], { type: "application/json" }));
-    const res = await fetch(
-      "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
-      { method: "POST", headers: { Authorization: "Bearer " + _accessToken }, body: form }
-    );
-    const created = await res.json();
-    _driveFileId = created.id;
+async function saveToDrive(){
+  if(!_token) return;
+  const payload={
+    checks: STATE.checks,
+    notas: STATE.notas,
+    comentarios: STATE.comentarios,
+    matricula: STATE.matricula,
+    km: STATE.km,
+    updatedAt: new Date().toISOString()
+  };
+  const body=JSON.stringify(payload);
+  try{
+    const fid=await getOrCreateFolder();
+    const fileId=await findFile(fid);
+    if(fileId){
+      await driveReq(
+        `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
+        {method:'PATCH',headers:{'Content-Type':'application/json'},body}
+      );
+    } else {
+      const form=new FormData();
+      form.append('metadata',new Blob([JSON.stringify({name:FILE_NAME,parents:[fid]})],{type:'application/json'}));
+      form.append('file',new Blob([body],{type:'application/json'}));
+      const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+        {method:'POST',headers:{Authorization:'Bearer '+_token},body:form});
+      const d=await r.json();
+      _fileId=d.id;
+    }
+    setState({syncState:'saved'});
+    setTimeout(()=>setState({syncState:null}),3000);
+  } catch(e){
+    setState({syncState:'error'});
+    console.error('Drive save error:',e);
   }
 }
 
-// ── Unified data store: { checks, meta } ─────────────────────────────────
-let _localCache = null;
-
-async function loadAllData() {
-  if (!isAuthenticated()) {
-    // Fallback to localStorage if not logged in
-    const checks = (() => { try { const v=localStorage.getItem("xc90_checks"); return v?JSON.parse(v):{}; } catch{ return {}; } })();
-    const meta = (() => { try { const v=localStorage.getItem("xc90_meta"); return v?JSON.parse(v):{ kmActual:0,matricula:"",notas:{},comentarios:{} }; } catch{ return { kmActual:0,matricula:"",notas:{},comentarios:{} }; } })();
-    _localCache = { checks, meta };
-    return _localCache;
-  }
-  try {
-    const data = await readDriveFile();
-    _localCache = data || { checks: {}, meta: { kmActual:0, matricula:"", notas:{}, comentarios:{} } };
-    // Also sync to localStorage as offline cache
-    localStorage.setItem("xc90_checks", JSON.stringify(_localCache.checks));
-    localStorage.setItem("xc90_meta", JSON.stringify(_localCache.meta));
-    return _localCache;
-  } catch(e) {
-    console.warn("Drive read failed, using localStorage:", e);
-    const checks = (() => { try { const v=localStorage.getItem("xc90_checks"); return v?JSON.parse(v):{}; } catch{ return {}; } })();
-    const meta = (() => { try { const v=localStorage.getItem("xc90_meta"); return v?JSON.parse(v):{ kmActual:0,matricula:"",notas:{},comentarios:{} }; } catch{ return { kmActual:0,matricula:"",notas:{},comentarios:{} }; } })();
-    _localCache = { checks, meta };
-    return _localCache;
-  }
-}
-
-async function saveAllData(checks, meta) {
-  // Always write to localStorage immediately (offline cache)
-  localStorage.setItem("xc90_checks", JSON.stringify(checks));
-  localStorage.setItem("xc90_meta", JSON.stringify(meta));
-  _localCache = { checks, meta };
-
-  if (!isAuthenticated()) return;
-
-  // Debounce Drive writes (avoid hammering API on every keystroke)
+function scheduleSave(){
+  lsSave();
+  if(!_token) return;
+  setState({syncState:'saving'});
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(async () => {
-    try {
-      await writeDriveFile({ checks, meta });
-    } catch(e) {
-      if (e.message === "TOKEN_EXPIRED") {
-        console.warn("Token expired, data saved locally only");
-      } else {
-        console.error("Drive write failed:", e);
-      }
+  _saveTimer=setTimeout(saveToDrive,1500);
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOCAL STORAGE
+══════════════════════════════════════════════════════════ */
+function lsSave(){
+  try{
+    localStorage.setItem('xc90_checks',JSON.stringify(STATE.checks));
+    localStorage.setItem('xc90_meta',JSON.stringify({
+      matricula:STATE.matricula, km:STATE.km,
+      notas:STATE.notas, comentarios:STATE.comentarios
+    }));
+  }catch(e){}
+}
+function lsLoad(){
+  try{
+    const c=localStorage.getItem('xc90_checks');
+    const m=localStorage.getItem('xc90_meta');
+    if(c) STATE.checks=JSON.parse(c);
+    if(m){
+      const mm=JSON.parse(m);
+      STATE.matricula=mm.matricula||'';
+      STATE.km=mm.km||0;
+      STATE.notas=mm.notas||{};
+      STATE.comentarios=mm.comentarios||{};
     }
-  }, 1200);
+  }catch(e){}
 }
 
-/* ─── STORAGE API (compatible with app) ─────────────────────────────────── */
-async function loadChecks() {
-  const d = await loadAllData();
-  return d.checks || {};
-}
-async function saveChecks(checks) {
-  const meta = _localCache?.meta || { kmActual:0, matricula:"", notas:{}, comentarios:{} };
-  await saveAllData(checks, meta);
-}
-async function loadMeta() {
-  const d = await loadAllData();
-  return d.meta || { kmActual:0, matricula:"", notas:{}, comentarios:{} };
-}
-async function saveMeta(meta) {
-  const checks = _localCache?.checks || {};
-  await saveAllData(checks, meta);
+/* ══════════════════════════════════════════════════════════
+   RENDER ENGINE (Virtual DOM-less, direct DOM)
+══════════════════════════════════════════════════════════ */
+function setState(patch){
+  Object.assign(STATE,patch);
+  render();
 }
 
-/* ─── PRINT ──────────────────────────────────────────────────────────────── */
-async function exportDocx() { window.print(); }
+function el(tag,attrs,...children){
+  const e=document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs||{})){
+    if(k==='class') e.className=v;
+    else if(k==='style' && typeof v==='object') Object.assign(e.style,v);
+    else if(k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(),v);
+    else e.setAttribute(k,v);
+  }
+  for(const c of children.flat(Infinity)){
+    if(c==null||c===false) continue;
+    e.appendChild(typeof c==='string'?document.createTextNode(c):c);
+  }
+  return e;
+}
 
+function svgRing(done,total,size,stroke,color){
+  const r=(size-stroke*2)/2;
+  const circ=2*Math.PI*r;
+  const pct=total>0?done/total:0;
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('width',size); svg.setAttribute('height',size);
+  svg.setAttribute('class','ring');
+  const bg=document.createElementNS(ns,'circle');
+  bg.setAttribute('cx',size/2); bg.setAttribute('cy',size/2); bg.setAttribute('r',r);
+  bg.setAttribute('stroke-width',stroke); bg.setAttribute('class','ring-bg');
+  const fill=document.createElementNS(ns,'circle');
+  fill.setAttribute('cx',size/2); fill.setAttribute('cy',size/2); fill.setAttribute('r',r);
+  fill.setAttribute('stroke-width',stroke); fill.setAttribute('stroke',color);
+  fill.setAttribute('stroke-dasharray',circ);
+  fill.setAttribute('stroke-dashoffset',circ*(1-pct));
+  fill.setAttribute('class','ring-fill');
+  const txt=document.createElementNS(ns,'text');
+  txt.setAttribute('x',size/2); txt.setAttribute('y',size/2);
+  txt.setAttribute('text-anchor','middle'); txt.setAttribute('dominant-baseline','middle');
+  txt.setAttribute('class','ring-text');
+  txt.textContent=total>0?Math.round(pct*100)+'%':'—';
+  svg.appendChild(bg); svg.appendChild(fill); svg.appendChild(txt);
+  return svg;
+}
 
+/* ══════════════════════════════════════════════════════════
+   COMPONENTS
+══════════════════════════════════════════════════════════ */
 
-/* ─── AUTH BAR COMPONENT ────────────────────────────────────────────────── */
-function AuthBar({ authState, onLogin, onLogout, syncStatus }) {
-  const isMissingClientId = GOOGLE_CLIENT_ID.includes("TU_CLIENT_ID");
+function renderMatricula(){
+  const wrap=document.getElementById('mat-area');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  if(STATE.editingMatricula){
+    const inp=el('input',{id:'mat-input',placeholder:'0000 ABC',value:STATE.matricula,
+      onKeydown:(e)=>{if(e.key==='Enter') saveMatricula();}
+    });
+    inp.style.cssText='background:rgba(255,255,255,.08);border:1px solid #006fa6;border-radius:7px;padding:6px 10px;color:#fff;width:115px;font-size:13px;outline:none;text-transform:uppercase;';
+    const btn=el('button',{style:{background:'#006fa6',border:'none',borderRadius:'7px',padding:'6px 11px',color:'#fff',fontSize:'14px'},onClick:saveMatricula},'✓');
+    const row=el('div',{style:{display:'flex',gap:'5px'}},inp,btn);
+    wrap.appendChild(row);
+    setTimeout(()=>inp.focus(),50);
+  } else {
+    const btn=el('button',{id:'mat-btn',onClick:()=>setState({editingMatricula:true})},
+      STATE.matricula||'— MATRÍCULA —');
+    wrap.appendChild(btn);
+  }
+}
 
-  if (isMissingClientId) {
-    return (
-      <div style={{ background:"rgba(184,134,11,0.15)", border:"1px solid rgba(184,134,11,0.4)",
-        borderRadius:10, padding:"10px 16px", marginBottom:16,
-        display:"flex", alignItems:"center", gap:10 }}>
-        <span style={{ fontSize:18 }}>⚙️</span>
-        <div>
-          <p style={{ margin:0, color:"#FFD54F", fontSize:13, fontWeight:600 }}>
-            Configura tu Google Client ID</p>
-          <p style={{ margin:"2px 0 0", color:"rgba(255,255,255,0.5)", fontSize:11 }}>
-            Edita el archivo index.html y reemplaza <code style={{background:"rgba(255,255,255,0.1)",padding:"1px 5px",borderRadius:4}}>TU_CLIENT_ID_AQUI</code> con tu Client ID de Google Cloud Console</p>
-        </div>
-      </div>
+function saveMatricula(){
+  const inp=document.getElementById('mat-input');
+  if(inp){ STATE.matricula=inp.value.toUpperCase(); }
+  STATE.editingMatricula=false;
+  scheduleSave();
+  render();
+}
+
+function renderAuthBar(){
+  const bar=document.getElementById('auth-bar');
+  const sub=document.getElementById('auth-sub');
+  const actions=document.getElementById('auth-actions');
+  if(!bar) return;
+  bar.className='no-print';
+
+  // sync dot color
+  const syncColors={saving:'#ffb300',saved:'#4caf50',error:'#f44336'};
+  const syncLabels={saving:'⟳ Guardando en Drive…',saved:'✓ Guardado en Drive',error:'⚠ Error al guardar — datos en local'};
+
+  if(STATE.authState==='out'){
+    bar.classList.add('out');
+    sub.textContent='Datos guardados localmente · Inicia sesión para sincronizar entre dispositivos';
+    actions.innerHTML='';
+    const btn=el('button',{id:'btn-login',onClick:doLogin},
+      el('svg',{width:'16',height:'16',viewBox:'0 0 24 24'},
+        ...['M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z|#4285F4',
+            'M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z|#34A853',
+            'M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z|#FBBC05',
+            'M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z|#EA4335'
+        ].map(s=>{
+          const [d,fill]=s.split('|');
+          const ns='http://www.w3.org/2000/svg';
+          const p=document.createElementNS(ns,'path');
+          p.setAttribute('d',d); p.setAttribute('fill',fill); return p;
+        })
+      ),
+      'Conectar con Google'
     );
+    actions.appendChild(btn);
+  } else if(STATE.authState==='loading'){
+    bar.style.background='rgba(0,111,166,.09)';
+    bar.style.border='1px solid rgba(0,111,166,.28)';
+    sub.textContent='⟳ Conectando con Drive…';
+    actions.innerHTML='';
+  } else {
+    // in
+    bar.style.background='rgba(46,125,50,.09)';
+    bar.style.border='1px solid rgba(46,125,50,.28)';
+    const syncTxt = STATE.syncState ? syncLabels[STATE.syncState] : 'Los cambios se sincronizan automáticamente';
+    sub.innerHTML='<span style="color:#81c784;font-weight:600;">✅ Drive conectado</span>&nbsp;&nbsp;'+syncTxt;
+    actions.innerHTML='';
+    const btn=el('button',{id:'btn-logout',onClick:doLogout},'Desconectar');
+    actions.appendChild(btn);
+  }
+}
+
+function renderKmSelect(){
+  const sel=document.getElementById('km-select');
+  if(!sel) return;
+  sel.value=STATE.km;
+  sel.onchange=e=>{
+    STATE.km=Number(e.target.value);
+    STATE.filter='all';
+    STATE.showHistory=false;
+    STATE.expandedSis={};
+    // auto-expand first system that has tasks
+    if(STATE.km>0){
+      const first=SISTEMAS.find(s=>TAREAS.some(t=>t.sis===s.id&&shouldDo(t,STATE.km)));
+      if(first) STATE.expandedSis[first.id]=true;
+    }
+    scheduleSave();
+    renderMain();
+  };
+}
+
+function renderTask(t){
+  const kmk=String(STATE.km);
+  const checked=!!(STATE.checks[kmk]&&STATE.checks[kmk][t.id]);
+  const nota=(STATE.notas[kmk]&&STATE.notas[kmk][t.id])||'';
+  const expanded=!!STATE.expandedTask[t.id];
+  const sis=SISTEMAS.find(s=>s.id===t.sis);
+  const prioCfg={
+    CRITICO:{color:'#ef5350',bg:'rgba(239,83,80,.15)',label:'CRÍTICO'},
+    RECOMENDADO:{color:'#ffa726',bg:'rgba(255,167,38,.12)',label:'RECOMEND.'},
+    OPCIONAL:{color:'#66bb6a',bg:'rgba(102,187,106,.12)',label:'OPCIONAL'}
+  }[t.prio]||{color:'#aaa',bg:'rgba(0,0,0,.1)',label:t.prio};
+
+  const chk=el('div',{
+    class:'chk'+(checked?' on':''),
+    onClick:(e)=>{ e.stopPropagation(); toggleCheck(t.id); }
+  });
+
+  const badge=el('span',{
+    class:'prio-badge',
+    style:{background:prioCfg.bg,color:prioCfg.color,border:'1px solid '+prioCfg.color+'44'}
+  },prioCfg.label);
+
+  const header=el('div',{class:'task-header',onClick:()=>{
+    STATE.expandedTask[t.id]=!STATE.expandedTask[t.id];
+    renderMain();
+  }},
+    chk,
+    el('span',{class:'task-name'},t.nombre),
+    badge,
+    nota?el('span',{class:'note-icon'},'📝'):'',
+    el('span',{class:'task-chevron'+(expanded?' open':'')}, '▾')
+  );
+
+  const wrap=el('div',{class:'task'+(checked?' checked':'')},header);
+
+  if(expanded){
+    let detailContent=[
+      el('p',{class:'task-hint'},'💡 '+t.nota),
+      el('div',{class:'detail-meta'},
+        el('span',{class:'sis-chip',style:{
+          color:sis.color,background:sis.light+'20',
+          border:'1px solid '+sis.color+'44'
+        }},sis.label),
+        el('span',{class:'interval-chip'},'Cada '+(t.intervalo*10)+' 000 km')
+      )
+    ];
+
+    if(STATE.editingNota===t.id){
+      const inp=el('input',{type:'text',placeholder:'Taller, factura, observación…',value:nota,
+        onKeydown:(e)=>{if(e.key==='Enter') saveNota(t.id,e.target.value);}
+      });
+      const saveBtn=el('button',{class:'nota-save',onClick:()=>saveNota(t.id,inp.value)},'✓');
+      const cancelBtn=el('button',{class:'nota-cancel',onClick:()=>{STATE.editingNota=null;renderMain();}},'✗');
+      detailContent.push(el('div',{class:'nota-edit'},inp,saveBtn,cancelBtn));
+      setTimeout(()=>inp.focus(),30);
+    } else {
+      const notaBtn=el('button',{class:'btn-nota',
+        style:{marginTop:'6px'},
+        onClick:(e)=>{e.stopPropagation();STATE.editingNota=t.id;renderMain();}
+      },nota?'✏️ Editar nota':'+ Añadir nota');
+      detailContent.push(notaBtn);
+      if(nota) detailContent.push(el('div',{class:'nota-display'},'📝 '+nota));
+    }
+
+    wrap.appendChild(el('div',{class:'task-detail'},...detailContent));
+  }
+  return wrap;
+}
+
+function toggleCheck(taskId){
+  const kmk=String(STATE.km);
+  if(!STATE.checks[kmk]) STATE.checks[kmk]={};
+  STATE.checks[kmk][taskId]=!STATE.checks[kmk][taskId];
+  scheduleSave();
+  renderMain();
+}
+
+function saveNota(taskId,texto){
+  const kmk=String(STATE.km);
+  if(!STATE.notas[kmk]) STATE.notas[kmk]={};
+  STATE.notas[kmk][taskId]=texto;
+  STATE.editingNota=null;
+  scheduleSave();
+  renderMain();
+}
+
+function renderSistema(sis,tareasApl){
+  const kmk=String(STATE.km);
+  const checks=STATE.checks[kmk]||{};
+  const done=tareasApl.filter(t=>checks[t.id]).length;
+  const total=tareasApl.length;
+  const allDone=done===total&&total>0;
+  const expanded=!!STATE.expandedSis[sis.id];
+
+  const ring=svgRing(done,total,44,4,sis.color);
+
+  const nameRow=el('div',{style:{flex:'1'}},
+    el('div',{class:'row',style:{gap:'6px'}},
+      el('span',{class:'sis-name',style:{color:allDone?sis.color:'#e8f4f8'}},sis.label),
+      allDone?el('span',{class:'sis-done-badge',style:{background:sis.color}},'✓ LISTO'):''
+    ),
+    el('span',{class:'sis-pct'},done+'/'+total+' · '+Math.round(done/total*100||0)+'%')
+  );
+
+  const header=el('button',{class:'sis-header',onClick:()=>{
+    STATE.expandedSis[sis.id]=!STATE.expandedSis[sis.id]; renderMain();
+  }},ring,nameRow,
+    el('span',{class:'sis-chevron'+(expanded?' open':'')},'▾')
+  );
+
+  const wrap=el('div',{class:'sis-wrap'+(allDone?' done':'')},header);
+  if(allDone) wrap.style.borderColor=sis.color+'55';
+
+  if(expanded){
+    const progFill=el('div',{class:'sis-prog-fill',style:{
+      background:sis.color,width:Math.round(done/total*100||0)+'%'
+    }});
+    const prog=el('div',{class:'sis-prog'},progFill);
+    const body=el('div',{class:'sis-body'},prog,...tareasApl.map(t=>renderTask(t)));
+    wrap.appendChild(body);
+  }
+  return wrap;
+}
+
+function renderMain(){
+  const main=document.getElementById('main');
+  if(!main) return;
+  main.innerHTML='';
+
+  if(STATE.km===0){
+    main.appendChild(el('div',{id:'empty'},
+      el('div',{class:'ico'},'🔧'),
+      el('p',{},'Selecciona los kilómetros actuales'),
+      el('p',{style:{marginTop:'6px',fontSize:'11px'}},'para ver las tareas de mantenimiento')
+    ));
+    return;
   }
 
-  if (authState === "loading") return (
-    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)",
-      borderRadius:10, padding:"10px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:10 }}>
-      <span style={{ animation:"spin 1s linear infinite", display:"inline-block", color:"#006FA6" }}>⟳</span>
-      <span style={{ color:"rgba(255,255,255,0.4)", fontSize:12 }}>Cargando datos de Drive…</span>
-    </div>
-  );
+  const kmk=String(STATE.km);
+  const checks=STATE.checks[kmk]||{};
+  const notas=STATE.notas[kmk]||{};
+  const comentario=STATE.comentarios[kmk]||'';
+  const tareasApl=TAREAS.filter(t=>shouldDo(t,STATE.km));
 
-  if (authState === "out") return (
-    <div style={{ background:"rgba(0,111,166,0.08)", border:"1px solid rgba(0,111,166,0.25)",
-      borderRadius:10, padding:"10px 16px", marginBottom:16,
-      display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, flexWrap:"wrap" }}>
-      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-        <span style={{ fontSize:18 }}>☁️</span>
-        <div>
-          <p style={{ margin:0, color:"#7FB3C8", fontSize:13, fontWeight:600 }}>
-            Sincronización con Google Drive</p>
-          <p style={{ margin:"2px 0 0", color:"rgba(255,255,255,0.35)", fontSize:11 }}>
-            Datos guardados localmente · Inicia sesión para sincronizar entre dispositivos</p>
-        </div>
-      </div>
-      <button onClick={onLogin} style={{
-        background:"#fff", border:"none", borderRadius:8, padding:"8px 16px",
-        cursor:"pointer", display:"flex", alignItems:"center", gap:8,
-        fontFamily:"'DM Sans',sans-serif", fontWeight:600, fontSize:13, color:"#1B3A4B",
-        boxShadow:"0 2px 8px rgba(0,0,0,0.3)", flexShrink:0
-      }}>
-        <svg width="16" height="16" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        Conectar con Google
-      </button>
-    </div>
-  );
+  if(tareasApl.length===0){
+    main.appendChild(el('div',{id:'empty'},
+      el('p',{},'No hay tareas programadas para este intervalo exacto.')
+    ));
+    return;
+  }
 
-  // Logged in
-  return (
-    <div style={{ background:"rgba(46,125,50,0.08)", border:"1px solid rgba(46,125,50,0.25)",
-      borderRadius:10, padding:"10px 16px", marginBottom:16,
-      display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, flexWrap:"wrap" }}>
-      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-        <span style={{ fontSize:18 }}>✅</span>
-        <div>
-          <p style={{ margin:0, color:"#81C784", fontSize:13, fontWeight:600 }}>
-            Drive conectado · Sincronización activa</p>
-          <p style={{ margin:"2px 0 0", color:"rgba(255,255,255,0.35)", fontSize:11 }}>
-            {syncStatus === "saving" ? "⟳ Guardando en Drive…"
-             : syncStatus === "saved" ? "✓ Guardado en Drive"
-             : syncStatus === "error" ? "⚠ Error al guardar — datos en local"
-             : "Los cambios se sincronizan automáticamente"}
-          </p>
-        </div>
-      </div>
-      <button onClick={onLogout} style={{
-        background:"transparent", border:"1px solid rgba(255,255,255,0.15)",
-        borderRadius:8, padding:"6px 12px", cursor:"pointer",
-        color:"rgba(255,255,255,0.4)", fontFamily:"'DM Sans',sans-serif", fontSize:12
-      }}>Desconectar</button>
-    </div>
-  );
-}
-
-
-/* ─── COMPONENTS ─────────────────────────────────────────────────────────── */
-function ProgressRing({ done, total, size=52, stroke=5, color="#006FA6" }) {
-  const r=(size-stroke*2)/2, circ=2*Math.PI*r, pct=total>0?done/total:0;
-  return (
-    <svg width={size} height={size} style={{transform:"rotate(-90deg)"}}>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={stroke}/>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
-        strokeDasharray={circ} strokeDashoffset={circ*(1-pct)} strokeLinecap="round"
-        style={{transition:"stroke-dashoffset 0.5s ease"}}/>
-      <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="middle" fill="white"
-        fontSize={11} fontFamily="'Space Mono',monospace"
-        style={{transform:`rotate(90deg)`,transformOrigin:`${size/2}px ${size/2}px`}}>
-        {total>0?`${Math.round(pct*100)}%`:"—"}
-      </text>
-    </svg>
-  );
-}
-
-function CheckItem({ tarea, checked, onToggle, nota, onNota }) {
-  const [expanded, setExpanded] = useState(false);
-  const [editNota, setEditNota] = useState(false);
-  const [notaVal, setNotaVal] = useState(nota||"");
-  const prio=PRIO_CFG[tarea.prio], sis=SISTEMAS.find(s=>s.id===tarea.sis);
-  const save=()=>{ onNota(notaVal); setEditNota(false); };
-
-  return (
-    <div style={{ borderRadius:10, marginBottom:5, overflow:"hidden",
-      background:checked?"linear-gradient(135deg,rgba(46,125,50,0.13),rgba(46,125,50,0.04))":"rgba(255,255,255,0.03)",
-      border:`1px solid ${checked?"rgba(46,125,50,0.35)":"rgba(255,255,255,0.07)"}`,
-      transition:"all 0.2s" }}>
-      <div style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",cursor:"pointer"}}
-        onClick={()=>setExpanded(v=>!v)}>
-        <div onClick={e=>{e.stopPropagation();onToggle();}} style={{
-          width:24,height:24,borderRadius:7,flexShrink:0,cursor:"pointer",transition:"all 0.2s",
-          border:`2px solid ${checked?"#2E7D32":"rgba(255,255,255,0.2)"}`,
-          background:checked?"#2E7D32":"transparent",
-          display:"flex",alignItems:"center",justifyContent:"center",
-          boxShadow:checked?"0 0 10px rgba(46,125,50,0.45)":"none" }}>
-          {checked&&<span style={{color:"#fff",fontSize:13,lineHeight:1}}>✓</span>}
-        </div>
-        <span style={{ flex:1,fontSize:13,fontFamily:"'DM Sans',sans-serif",fontWeight:500,
-          color:checked?"rgba(255,255,255,0.45)":"#E8F4F8",
-          textDecoration:checked?"line-through":"none",transition:"all 0.2s" }}>{tarea.nombre}</span>
-        <div style={{display:"flex",gap:5,alignItems:"center",flexShrink:0}}>
-          <span style={{fontSize:10,fontFamily:"'Space Mono',monospace",fontWeight:"bold",
-            padding:"2px 6px",borderRadius:5,background:prio.bg+"22",color:prio.color,
-            border:`1px solid ${prio.color}44`}}>{prio.label}</span>
-          {nota&&<span style={{fontSize:12,opacity:0.6}}>📝</span>}
-          <span style={{fontSize:11,color:"rgba(255,255,255,0.25)",display:"inline-block",
-            transition:"transform 0.2s",transform:expanded?"rotate(180deg)":"rotate(0deg)"}}>▾</span>
-        </div>
-      </div>
-      {expanded&&(
-        <div style={{padding:"0 12px 10px 46px",borderTop:"1px solid rgba(255,255,255,0.05)"}}>
-          <p style={{color:"#7FB3C8",fontSize:12,margin:"8px 0 6px",lineHeight:1.6}}>💡 {tarea.nota}</p>
-          <div style={{display:"flex",gap:7,alignItems:"center",flexWrap:"wrap"}}>
-            <span style={{fontSize:11,color:sis.color,background:sis.light+"18",
-              border:`1px solid ${sis.color}44`,padding:"2px 7px",borderRadius:20,
-              fontFamily:"'Space Mono',monospace"}}>{sis.icon} {sis.label}</span>
-            <span style={{fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"'Space Mono',monospace"}}>
-              Cada {tarea.intervalo*10} 000 km</span>
-            {!editNota?(
-              <button onClick={()=>setEditNota(true)} style={{background:"transparent",
-                border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.45)",
-                borderRadius:6,padding:"2px 9px",cursor:"pointer",fontSize:11}}>
-                {nota?"✏️ Editar nota":"+ Añadir nota"}</button>
-            ):(
-              <div style={{display:"flex",gap:5,width:"100%",marginTop:5}}>
-                <input autoFocus value={notaVal} onChange={e=>setNotaVal(e.target.value)}
-                  placeholder="Taller, factura, observación..."
-                  onKeyDown={e=>e.key==="Enter"&&save()}
-                  style={{flex:1,background:"rgba(255,255,255,0.07)",
-                    border:"1px solid rgba(0,111,166,0.5)",borderRadius:7,padding:"5px 9px",
-                    color:"#fff",fontSize:12,outline:"none",fontFamily:"'DM Sans',sans-serif"}}/>
-                <button onClick={save} style={{background:"#006FA6",border:"none",borderRadius:7,
-                  padding:"5px 11px",color:"#fff",cursor:"pointer",fontSize:12}}>✓</button>
-                <button onClick={()=>setEditNota(false)} style={{background:"transparent",
-                  border:"1px solid rgba(255,255,255,0.15)",borderRadius:7,padding:"5px 11px",
-                  color:"rgba(255,255,255,0.4)",cursor:"pointer",fontSize:12}}>✗</button>
-              </div>
-            )}
-          </div>
-          {nota&&!editNota&&(
-            <p style={{margin:"7px 0 0",padding:"7px 9px",borderRadius:7,
-              background:"rgba(0,111,166,0.13)",border:"1px solid rgba(0,111,166,0.28)",
-              color:"#A8D4E8",fontSize:12}}>📝 {nota}</p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SistemaSection({ sistema, tareas, checks, onToggle, notas, onNota, expanded, onToggleExpand }) {
-  if(!tareas.length) return null;
-  const done=tareas.filter(t=>checks[t.id]).length, total=tareas.length;
-  const allDone=done===total&&total>0;
-  return (
-    <div style={{ marginBottom:10,borderRadius:14,overflow:"hidden",transition:"all 0.3s",
-      border:`1px solid ${allDone?sistema.color+"66":"rgba(255,255,255,0.07)"}`,
-      background:allDone?`${sistema.color}0c`:"rgba(255,255,255,0.02)" }}>
-      <button onClick={onToggleExpand} style={{width:"100%",background:"none",border:"none",
-        display:"flex",alignItems:"center",gap:12,padding:"12px 16px",cursor:"pointer",textAlign:"left"}}>
-        <ProgressRing done={done} total={total} size={44} stroke={4} color={sistema.color}/>
-        <div style={{flex:1}}>
-          <div style={{display:"flex",alignItems:"center",gap:7}}>
-            <span style={{fontSize:16}}>{sistema.icon}</span>
-            <span style={{color:allDone?sistema.color:"#E8F4F8",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14}}>
-              {sistema.label}</span>
-            {allDone&&<span style={{fontSize:10,background:sistema.color,color:"#fff",padding:"2px 7px",
-              borderRadius:20,fontFamily:"'Space Mono',monospace"}}>✓ LISTO</span>}
-          </div>
-          <span style={{color:"rgba(255,255,255,0.35)",fontSize:11,fontFamily:"'Space Mono',monospace"}}>
-            {done}/{total} · {total>0?Math.round(done/total*100):0}%</span>
-        </div>
-        <span style={{color:"rgba(255,255,255,0.25)",fontSize:16,display:"inline-block",
-          transition:"transform 0.25s",transform:expanded?"rotate(180deg)":"rotate(0deg)"}}>▾</span>
-      </button>
-      {expanded&&(
-        <div style={{padding:"0 12px 12px"}}>
-          <div style={{height:3,borderRadius:3,background:"rgba(255,255,255,0.07)",marginBottom:12,overflow:"hidden"}}>
-            <div style={{height:"100%",borderRadius:3,transition:"width 0.5s",
-              background:`linear-gradient(90deg,${sistema.color},${sistema.color}99)`,
-              width:`${total>0?(done/total*100):0}%`}}/>
-          </div>
-          {tareas.map(t=><CheckItem key={t.id} tarea={t} checked={!!checks[t.id]}
-            onToggle={()=>onToggle(t.id)} nota={notas[t.id]} onNota={n=>onNota(t.id,n)}/>)}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ─── COMENTARIOS ────────────────────────────────────────────────────────── */
-function ComentariosPanel({ value, onChange }) {
-  return (
-    <div style={{ borderRadius:14, marginBottom:16, overflow:"hidden",
-      border:"1px solid rgba(0,111,166,0.3)", background:"rgba(0,111,166,0.05)" }}>
-      <div style={{ padding:"12px 16px 8px", borderBottom:"1px solid rgba(0,111,166,0.15)",
-        display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12 }}>
-        <div>
-          <span style={{ color:"#7FB3C8", fontFamily:"'Space Mono',monospace", fontSize:11,
-            letterSpacing:1.5, textTransform:"uppercase" }}>💬 Comentarios de la revisión</span>
-          <p style={{ margin:"4px 0 0", color:"rgba(255,255,255,0.3)", fontSize:11,
-            fontFamily:"'DM Sans',sans-serif", lineHeight:1.5 }}>
-            Observaciones generales · trabajos pendientes · anomalías detectadas · datos del taller
-          </p>
-        </div>
-        {value && <span style={{ fontSize:10, background:"rgba(0,111,166,0.25)", color:"#7FB3C8",
-          padding:"2px 8px", borderRadius:20, fontFamily:"'Space Mono',monospace",
-          whiteSpace:"nowrap", flexShrink:0 }}>{value.split("\n").filter(Boolean).length} líneas</span>}
-      </div>
-      <textarea
-        value={value}
-        onChange={e=>onChange(e.target.value)}
-        placeholder={"Ej:\n— Turbo con ligero ruido a 3000 rpm, monitorizar\n— Neumáticos delanteros al límite, cambiar en próxima revisión\n— Taller: Autovolvo Madrid · Mecánico: Carlos López · Tel: 91 xxx xxxx\n— Factura nº 1234 · Importe: 320 €"}
-        style={{ width:"100%", minHeight:120, background:"transparent", border:"none",
-          outline:"none", resize:"vertical", color:"#E8F4F8", fontSize:13,
-          fontFamily:"'DM Sans',sans-serif", lineHeight:1.7, padding:"12px 16px",
-          boxSizing:"border-box" }}
-      />
-    </div>
-  );
-}
-
-/* ─── EXPORT DOCX BUTTON ─────────────────────────────────────────────────── */
-function ExportDocxButton({ onClick, loading, disabled, exportStatus }) {
-  const getBg = () => {
-    if(disabled) return "rgba(255,255,255,0.06)";
-    if(exportStatus==="ok") return "linear-gradient(135deg,#1B5E20,#2E7D32)";
-    if(exportStatus==="err") return "linear-gradient(135deg,#B71C1C,#C62828)";
-    return "linear-gradient(135deg,#1B3A4B,#006FA6)";
-  };
-  const getLabel = () => {
-    if(loading) return "⟳ Generando DOCX…";
-    if(exportStatus==="ok") return "✓ Imprimiendo…";
-    if(exportStatus==="err") return "⚠ Error — inténtalo de nuevo";
-    return "🖨️ Imprimir / Guardar PDF";
-  };
-
-  return (
-    <button onClick={onClick} disabled={disabled||loading} style={{
-      display:"flex",alignItems:"center",gap:8,
-      background:getBg(),
-      border:`1px solid ${disabled?"rgba(255,255,255,0.1)":"rgba(0,180,216,0.4)"}`,
-      borderRadius:10,padding:"10px 20px",cursor:disabled?"not-allowed":"pointer",
-      color:disabled?"rgba(255,255,255,0.3)":"#fff",
-      fontFamily:"'DM Sans',sans-serif",fontWeight:600,fontSize:13,
-      transition:"all 0.3s",opacity:loading?0.8:1,
-      boxShadow:disabled?"none":"0 4px 20px rgba(0,111,166,0.25)"
-    }}>
-      <span style={loading?{display:"inline-block",animation:"spin 0.8s linear infinite"}:{}}>
-        {loading?"⟳":""}
-      </span>
-      {getLabel()}
-    </button>
-  );
-}
-
-/* ─── APP ────────────────────────────────────────────────────────────────── */
-export default function App() {
-  const [authState,    setAuthState]    = useState('init');
-  const [syncStatus,   setSyncStatus]   = useState(null);
-  const [authEmail,    setAuthEmail]    = useState('');
-  const [kmActual,   setKmActual]   = useState(0);
-  const [allChecks,  setAllChecks]  = useState({});
-  const [meta,       setMeta]       = useState({ kmActual:0, matricula:"", notas:{}, comentarios:{} });
-  const [expandedSis,setExpandedSis]= useState({});
-  const [activeFilter,setActiveFilter]= useState("all");
-  const [loaded,     setLoaded]     = useState(false);
-  const [showHistory,setShowHistory]= useState(false);
-  const [editMatric, setEditMatric] = useState(false);
-  const [matriculaV, setMatriculaV] = useState("");
-  const [exporting,  setExporting]  = useState(false);
-  const [exportStatus,setExportStatus]= useState(null); // null | "ok" | "err"
-
-  useEffect(()=>{
-    (async()=>{
-      const [c,m] = await Promise.all([loadChecks(), loadMeta()]);
-      setAllChecks(c);
-      const mf = { kmActual:0,matricula:"",notas:{},comentarios:{}, ...m };
-      setMeta(mf); setMatriculaV(mf.matricula||"");
-      if(mf.kmActual) setKmActual(mf.kmActual);
-      setLoaded(true);
-    })();
-  },[]);
-
-  const kmKey   = String(kmActual);
-  const checks  = allChecks[kmKey]||{};
-  const notasKm = meta.notas?.[kmKey]||{};
-  const comentario = meta.comentarios?.[kmKey]||"";
-
-  const tareasAplicables = kmActual>0 ? TAREAS.filter(t=>shouldDoAt(t,kmActual)) : [];
-  const done  = tareasAplicables.filter(t=>checks[t.id]).length;
-  const total = tareasAplicables.length;
-  const pct   = total>0?Math.round(done/total*100):0;
-
-  const filterT = ts => {
-    if(activeFilter==="critico")   return ts.filter(t=>t.prio==="CRÍTICO");
-    if(activeFilter==="pendiente") return ts.filter(t=>!checks[t.id]);
+  // Filter
+  function applyFilter(ts){
+    if(STATE.filter==='critico') return ts.filter(t=>t.prio==='CRITICO');
+    if(STATE.filter==='pend') return ts.filter(t=>!checks[t.id]);
     return ts;
-  };
+  }
 
-  const handleToggle = useCallback(async(id)=>{
-    const nc = { ...allChecks, [kmKey]:{ ...(allChecks[kmKey]||{}), [id]:!(allChecks[kmKey]?.[id]) } };
-    setAllChecks(nc);
-    setSyncStatus('saving');
-    try { await saveChecks(nc); setSyncStatus('saved'); } catch{ setSyncStatus('error'); }
-    setTimeout(()=>setSyncStatus(null), 3000);
-  },[allChecks,kmKey]);
+  const done=tareasApl.filter(t=>checks[t.id]).length;
+  const total=tareasApl.length;
+  const pct=Math.round(done/total*100);
 
-  const handleNota = useCallback(async(id,texto)=>{
-    const nm = { ...meta, notas:{ ...meta.notas, [kmKey]:{ ...(meta.notas?.[kmKey]||{}), [id]:texto } } };
-    setMeta(nm); await saveMeta(nm);
-  },[meta,kmKey]);
+  // Progress card
+  const barEl=el('div',{id:'progress-bar',style:{width:pct+'%'}});
+  if(pct===100) barEl.classList.add('done');
 
-  const handleComentario = useCallback(async(texto)=>{
-    const nm = { ...meta, comentarios:{ ...(meta.comentarios||{}), [kmKey]:texto } };
-    setMeta(nm); await saveMeta(nm);
-  },[meta,kmKey]);
+  const statsRow=el('div',{class:'row',style:{marginTop:'8px',gap:'10px'}},
+    el('span',{class:'stat-pill',style:{color:'#ef5350'}},
+      tareasApl.filter(t=>t.prio==='CRITICO').length+' Críticas'),
+    el('span',{class:'stat-pill',style:{color:'#ffa726'}},
+      tareasApl.filter(t=>t.prio==='RECOMENDADO').length+' Recomend.'),
+    el('span',{class:'stat-pill',style:{color:'#66bb6a'}},
+      tareasApl.filter(t=>t.prio==='OPCIONAL').length+' Opcionales')
+  );
 
-  const handleKmChange = async(km)=>{
-    setKmActual(km); setExportStatus(null);
-    const nm = { ...meta, kmActual:km };
-    setMeta(nm); await saveMeta(nm);
-    if(km>0){
-      const first = SISTEMAS.find(s=>TAREAS.some(t=>t.sis===s.id&&shouldDoAt(t,km)));
-      if(first) setExpandedSis({[first.id]:true});
+  main.appendChild(el('div',{class:'card no-print'},
+    el('div',{class:'row',style:{justifyContent:'space-between',marginBottom:'8px'}},
+      el('span',{style:{fontWeight:'700',fontSize:'14px'}},'Revisión '+Number(STATE.km).toLocaleString('es-ES')+' km'),
+      el('span',{style:{color:'#7fb3c8',fontSize:'12px'}},done+' / '+total)
+    ),
+    el('div',{id:'progress-bar-wrap'},barEl),
+    statsRow
+  ));
+
+  // Filter bar
+  const filterBar=el('div',{id:'filter-bar','class':'no-print'});
+  [['all','Todas'],['critico','⚠ Críticas'],['pend','◯ Pendientes']].forEach(([id,lbl])=>{
+    const btn=el('button',{
+      class:'filter-btn'+(STATE.filter===id?' active':''),
+      onClick:()=>{STATE.filter=id; renderMain();}
+    },lbl);
+    filterBar.appendChild(btn);
+  });
+  // History btn
+  filterBar.appendChild(el('button',{id:'btn-history',onClick:()=>{
+    STATE.showHistory=!STATE.showHistory; renderMain();
+  }},'📋 Historial'));
+  // Print btn
+  filterBar.appendChild(el('button',{id:'btn-print',onClick:()=>window.print()},'🖨️ Imprimir / PDF'));
+  main.appendChild(filterBar);
+
+  // History
+  if(STATE.showHistory){
+    const histWrap=el('div',{id:'history-wrap','class':'no-print'});
+    histWrap.appendChild(el('p',{style:{fontSize:'12px',letterSpacing:'1px',color:'#7fb3c8',marginBottom:'10px'}},'HISTORIAL DE REVISIONES'));
+    const entries=Object.entries(STATE.checks).filter(([,v])=>Object.keys(v).length>0).sort((a,b)=>Number(b[0])-Number(a[0]));
+    if(entries.length===0){
+      histWrap.appendChild(el('p',{style:{color:'rgba(255,255,255,.3)',fontSize:'12px'}},'Sin revisiones registradas.'));
     }
-  };
-
-  const handleMatriculaSave = async()=>{
-    const nm={...meta,matricula:matriculaV};
-    setMeta(nm); await saveMeta(nm); setEditMatric(false);
-  };
-
-  const handleLogin = useCallback(() => {
-    requestLogin(async () => {
-      setAuthState('loading');
-      try {
-        await loadAppData();
-        setAuthState('in');
-      } catch(e) { setAuthState('out'); }
+    entries.forEach(([km,v])=>{
+      const t2=TAREAS.filter(t=>shouldDo(t,Number(km))).length;
+      const d2=Object.values(v).filter(Boolean).length;
+      const pct2=t2>0?Math.round(d2/t2*100):0;
+      const isComplete=d2===t2;
+      const row=el('div',{class:'hist-row'},
+        el('button',{class:'hist-km',onClick:()=>{
+          STATE.km=Number(km);
+          STATE.showHistory=false;
+          STATE.filter='all';
+          document.getElementById('km-select').value=STATE.km;
+          renderMain();
+        }},Number(km).toLocaleString('es-ES')+' km'),
+        el('div',{class:'hist-bar'},
+          el('div',{class:'hist-fill',style:{background:isComplete?'#4caf50':'#006fa6',width:pct2+'%'}})
+        ),
+        el('span',{class:'hist-count'},d2+'/'+t2)
+      );
+      histWrap.appendChild(row);
     });
-  }, [loadAppData]);
+    main.appendChild(histWrap);
+  }
 
-  const handleLogout = useCallback(() => {
-    logout();
-    setAuthState('out');
-    setSyncStatus(null);
-  }, []);
+  // Sistemas
+  SISTEMAS.forEach(sis=>{
+    const sisTareas=applyFilter(tareasApl.filter(t=>t.sis===sis.id));
+    // for progress ring use full list even when filtered
+    const sisAll=tareasApl.filter(t=>t.sis===sis.id);
+    if(sisTareas.length===0) return;
+    // render with filtered tasks but pass full list for progress
+    const wrap=renderSistemaMixed(sis,sisAll,sisTareas);
+    main.appendChild(wrap);
+  });
 
-  const handleExport = async()=>{
-    if(!kmActual||total===0) return;
-    setExporting(true); setExportStatus(null);
-    try {
-      const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"});
-      await exportDocx({ km:kmActual, matricula:meta.matricula, checks, notas:notasKm, comentario, fecha });
-      setExportStatus("ok");
-    } catch(e) {
-      console.error(e); setExportStatus("err");
-    }
-    setExporting(false);
-  };
+  // Done banner
+  if(done===total){
+    main.appendChild(el('div',{id:'done-banner'},
+      el('div',{style:{fontSize:'30px',marginBottom:'6px'}},'✅'),
+      el('p',{},'REVISIÓN COMPLETADA'),
+      el('small',{},`Todas las tareas de ${Number(STATE.km).toLocaleString('es-ES')} km marcadas`)
+    ));
+  }
 
-  const historial = Object.entries(allChecks)
-    .filter(([,v])=>Object.keys(v).length>0)
-    .sort((a,b)=>Number(b[0])-Number(a[0]));
-
-  if(!loaded) return (
-    <div style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#0d1f2d"}}>
-      <div style={{color:"#006FA6",fontFamily:"'Space Mono',monospace",fontSize:14}}>Cargando...</div>
-    </div>
-  );
-
-  return (
-    <div style={{minHeight:"100vh",background:"linear-gradient(160deg,#0d1f2d 0%,#0a1520 60%,#060f16 100%)",
-      fontFamily:"'DM Sans',sans-serif",color:"#E8F4F8"}}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
-        * { box-sizing:border-box; }
-        select option { background:#1B3A4B; }
-        ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-thumb { background:#006FA6; border-radius:2px; }
-        textarea::placeholder { color:rgba(255,255,255,0.18); line-height:1.8; }
-        @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-      `}</style>
-      <div style={{maxWidth:780,margin:"0 auto",padding:"0 16px 60px"}}>
-
-        {/* HEADER */}
-        <div style={{padding:"24px 0 18px",borderBottom:"1px solid rgba(255,255,255,0.07)",marginBottom:20}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-            <div>
-              <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:3}}>
-                <div style={{width:5,height:28,borderRadius:3,background:"linear-gradient(180deg,#006FA6,#1B3A4B)"}}/>
-                <h1 style={{margin:0,fontSize:20,fontWeight:700,fontFamily:"'Space Mono',monospace",letterSpacing:-0.5,color:"#fff"}}>
-                  VOLVO XC90 D5</h1>
-              </div>
-              <p style={{margin:0,color:"#7FB3C8",fontSize:11,fontFamily:"'Space Mono',monospace",paddingLeft:14}}>
-                Plan de mantenimiento · 2019 · AWD · 235 CV Diesel</p>
-            </div>
-            <div>
-              {!editMatric?(
-                <button onClick={()=>setEditMatric(true)} style={{background:"rgba(255,255,255,0.05)",
-                  border:"1px solid rgba(255,255,255,0.1)",borderRadius:9,padding:"7px 12px",
-                  cursor:"pointer",color:"#fff",fontFamily:"'Space Mono',monospace",
-                  fontSize:12,letterSpacing:2}}>{meta.matricula||"— MATRÍCULA —"}</button>
-              ):(
-                <div style={{display:"flex",gap:5}}>
-                  <input autoFocus value={matriculaV}
-                    onChange={e=>setMatriculaV(e.target.value.toUpperCase())}
-                    placeholder="0000 ABC"
-                    onKeyDown={e=>e.key==="Enter"&&handleMatriculaSave()}
-                    style={{background:"rgba(255,255,255,0.08)",border:"1px solid #006FA6",
-                      borderRadius:7,padding:"7px 10px",color:"#fff",width:110,
-                      fontFamily:"'Space Mono',monospace",fontSize:13,outline:"none"}}/>
-                  <button onClick={handleMatriculaSave} style={{background:"#006FA6",border:"none",
-                    borderRadius:7,padding:"7px 11px",color:"#fff",cursor:"pointer"}}>✓</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* KM SELECTOR */}
-        <div style={{marginBottom:20}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,
-            background:"linear-gradient(135deg,#1B3A4B,#0d2535)",borderRadius:14,
-            padding:"14px 20px",boxShadow:"0 6px 28px rgba(0,0,0,0.28)"}}>
-            <span style={{color:"#7FB3C8",fontFamily:"'Space Mono',monospace",fontSize:10,
-              letterSpacing:2,textTransform:"uppercase",flexShrink:0}}>KM actuales</span>
-            <select value={kmActual} onChange={e=>handleKmChange(Number(e.target.value))} style={{
-              background:"transparent",border:"none",borderBottom:"2px solid #006FA6",
-              color:"#fff",fontFamily:"'Space Mono',monospace",fontSize:20,fontWeight:"bold",
-              padding:"3px 6px",cursor:"pointer",outline:"none",WebkitAppearance:"none",flex:1}}>
-              <option value={0} style={{background:"#1B3A4B"}}>— seleccionar —</option>
-              {KM_STEPS.map(km=><option key={km} value={km} style={{background:"#1B3A4B"}}>
-                {km.toLocaleString("es-ES")} km</option>)}
-            </select>
-          </div>
-        </div>
-
-        {/* AUTH BAR */}
-        <div className="no-print">
-          <AuthBar authState={authState} onLogin={handleLogin} onLogout={handleLogout} syncStatus={syncStatus}/>
-        </div>
-
-        {/* STATS */}
-        {kmActual>0&&(
-          <div style={{background:"rgba(255,255,255,0.03)",borderRadius:14,
-            border:"1px solid rgba(255,255,255,0.07)",padding:"14px 18px",marginBottom:16,
-            display:"flex",alignItems:"center",gap:18}}>
-            <ProgressRing done={done} total={total} size={60} stroke={5} color="#006FA6"/>
-            <div style={{flex:1}}>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:7}}>
-                <span style={{color:"#fff",fontWeight:700,fontSize:14}}>
-                  Revisión {kmActual.toLocaleString("es-ES")} km</span>
-                <span style={{color:"#7FB3C8",fontFamily:"'Space Mono',monospace",fontSize:12}}>
-                  {done} / {total}</span>
-              </div>
-              <div style={{height:5,borderRadius:3,background:"rgba(255,255,255,0.07)",overflow:"hidden"}}>
-                <div style={{height:"100%",borderRadius:3,transition:"width 0.5s",width:`${pct}%`,
-                  background:pct===100?"linear-gradient(90deg,#2E7D32,#4CAF50)":"linear-gradient(90deg,#006FA6,#00B4D8)"}}/>
-              </div>
-              <div style={{display:"flex",gap:10,marginTop:8}}>
-                {[["⚠ Críticas",tareasAplicables.filter(t=>t.prio==="CRÍTICO").length,"#C62828"],
-                  ["Recomend.",tareasAplicables.filter(t=>t.prio==="RECOMENDADO").length,"#E65100"],
-                  ["Opcionales",tareasAplicables.filter(t=>t.prio==="OPCIONAL").length,"#2E7D32"]
-                ].map(([l,c,col])=>(
-                  <span key={l} style={{fontSize:11,fontFamily:"'Space Mono',monospace",color:col}}>{c} {l}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TOOLBAR */}
-        {kmActual>0&&total>0&&(
-          <div style={{display:"flex",gap:7,marginBottom:16,flexWrap:"wrap",alignItems:"center"}}>
-            {[["all","Todas"],["critico","⚠ Críticas"],["pendiente","◯ Pendientes"]].map(([id,lbl])=>(
-              <button key={id} onClick={()=>setActiveFilter(id)} style={{
-                background:activeFilter===id?"#006FA6":"rgba(255,255,255,0.05)",
-                border:`1px solid ${activeFilter===id?"#006FA6":"rgba(255,255,255,0.1)"}`,
-                borderRadius:20,padding:"5px 12px",cursor:"pointer",
-                color:activeFilter===id?"#fff":"rgba(255,255,255,0.55)",
-                fontSize:12,fontFamily:"'DM Sans',sans-serif",fontWeight:500,transition:"all 0.2s"
-              }}>{lbl}</button>
-            ))}
-            <button onClick={()=>setShowHistory(v=>!v)} style={{
-              background:showHistory?"rgba(255,255,255,0.1)":"rgba(255,255,255,0.04)",
-              border:"1px solid rgba(255,255,255,0.1)",borderRadius:20,padding:"5px 12px",
-              cursor:"pointer",color:"rgba(255,255,255,0.55)",fontSize:12}}>📋 Historial</button>
-            <div style={{marginLeft:"auto"}}>
-              <ExportDocxButton onClick={handleExport} loading={exporting}
-                disabled={!kmActual||total===0} exportStatus={exportStatus}/>
-            </div>
-          </div>
-        )}
-
-        {/* EXPORT STATUS MESSAGE */}
-        {exportStatus==="ok"&&(
-          <div style={{background:"rgba(46,125,50,0.12)",border:"1px solid rgba(46,125,50,0.3)",
-            borderRadius:12,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"flex-start",gap:10}}>
-            <span style={{fontSize:20}}>📎</span>
-            <div>
-              <p style={{margin:0,color:"#81C784",fontWeight:600,fontSize:13}}>
-                Ficha DOCX generada correctamente</p>
-              <p style={{margin:"4px 0 0",color:"rgba(255,255,255,0.5)",fontSize:12,lineHeight:1.5}}>
-                Usa "Guardar como PDF" en el diálogo de impresión para guardar la ficha en el móvil o enviarla por WhatsApp.</p>
-            </div>
-          </div>
-        )}
-
-        {/* HISTORIAL */}
-        {showHistory&&(
-          <div style={{background:"rgba(255,255,255,0.03)",borderRadius:14,
-            border:"1px solid rgba(255,255,255,0.07)",padding:18,marginBottom:16}}>
-            <h3 style={{margin:"0 0 12px",fontSize:12,fontFamily:"'Space Mono',monospace",
-              color:"#7FB3C8",letterSpacing:1}}>HISTORIAL DE REVISIONES</h3>
-            {historial.length===0
-              ?<p style={{color:"rgba(255,255,255,0.25)",fontSize:12,margin:0}}>Sin revisiones registradas.</p>
-              :historial.map(([km,v])=>{
-                const t2=TAREAS.filter(t=>shouldDoAt(t,Number(km))).length;
-                const d2=Object.values(v).filter(Boolean).length;
-                return (
-                  <div key={km} style={{display:"flex",alignItems:"center",gap:12,
-                    padding:"8px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                    <button onClick={()=>{ handleKmChange(Number(km)); setShowHistory(false); }} style={{
-                      background:"rgba(0,111,166,0.15)",border:"1px solid rgba(0,111,166,0.35)",
-                      borderRadius:7,padding:"3px 10px",cursor:"pointer",
-                      color:"#00B4D8",fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:"bold"}}>
-                      {Number(km).toLocaleString("es-ES")} km</button>
-                    <div style={{flex:1,height:3,borderRadius:2,background:"rgba(255,255,255,0.07)",overflow:"hidden"}}>
-                      <div style={{height:"100%",borderRadius:2,
-                        background:d2===t2?"#2E7D32":"#006FA6",
-                        width:`${t2>0?Math.round(d2/t2*100):0}%`}}/>
-                    </div>
-                    <span style={{color:"rgba(255,255,255,0.4)",fontFamily:"'Space Mono',monospace",fontSize:11}}>
-                      {d2}/{t2}</span>
-                  </div>
-                );
-              })}
-          </div>
-        )}
-
-        {/* EMPTY */}
-        {kmActual===0&&(
-          <div style={{textAlign:"center",padding:"60px 20px",color:"rgba(255,255,255,0.25)"}}>
-            <div style={{fontSize:46,marginBottom:14}}>🔧</div>
-            <p style={{fontFamily:"'Space Mono',monospace",fontSize:13,letterSpacing:1}}>
-              Selecciona los kilómetros actuales<br/>para ver las tareas de mantenimiento</p>
-          </div>
-        )}
-
-        {/* TAREAS */}
-        {kmActual>0&&total===0&&(
-          <div style={{textAlign:"center",padding:"40px 20px",color:"rgba(255,255,255,0.25)"}}>
-            <p style={{fontFamily:"'Space Mono',monospace",fontSize:13}}>
-              No hay tareas programadas para este intervalo exacto.</p>
-          </div>
-        )}
-
-        {kmActual>0&&SISTEMAS.map(sis=>{
-          const sT=filterT(tareasAplicables.filter(t=>t.sis===sis.id));
-          if(!sT.length) return null;
-          return (
-            <SistemaSection key={sis.id} sistema={sis} tareas={sT}
-              checks={checks} onToggle={handleToggle}
-              notas={notasKm} onNota={handleNota}
-              expanded={!!expandedSis[sis.id]}
-              onToggleExpand={()=>setExpandedSis(v=>({...v,[sis.id]:!v[sis.id]}))}/>
-          );
-        })}
-
-        {/* COMPLETADO */}
-        {kmActual>0&&total>0&&done===total&&(
-          <div style={{marginTop:16,borderRadius:14,padding:"20px",textAlign:"center",
-            background:"linear-gradient(135deg,rgba(46,125,50,0.18),rgba(46,125,50,0.04))",
-            border:"1px solid rgba(46,125,50,0.35)"}}>
-            <div style={{fontSize:32,marginBottom:6}}>✅</div>
-            <p style={{margin:0,fontFamily:"'Space Mono',monospace",fontSize:14,color:"#4CAF50",fontWeight:"bold"}}>
-              REVISIÓN COMPLETADA</p>
-            <p style={{margin:"5px 0 0",color:"rgba(255,255,255,0.4)",fontSize:12}}>
-              Todas las tareas de {kmActual.toLocaleString("es-ES")} km marcadas</p>
-          </div>
-        )}
-
-        {/* COMENTARIOS */}
-        {kmActual>0&&total>0&&(
-          <div style={{marginTop:20}}>
-            <ComentariosPanel value={comentario} onChange={handleComentario}/>
-          </div>
-        )}
-
-        {/* EXPORT BOTTOM */}
-        {kmActual>0&&total>0&&(
-          <div style={{display:"flex",justifyContent:"center",gap:12,
-            marginTop:8,marginBottom:8,flexWrap:"wrap",alignItems:"center"}}>
-            <ExportDocxButton onClick={handleExport} loading={exporting}
-              disabled={!kmActual||total===0} exportStatus={exportStatus}/>
-            <span style={{color:"rgba(255,255,255,0.3)",fontSize:11,fontFamily:"'Space Mono',monospace"}}>
-              Genera un Word listo para imprimir</span>
-          </div>
-        )}
-
-        {/* FOOTER */}
-        <div style={{marginTop:32,paddingTop:16,borderTop:"1px solid rgba(255,255,255,0.05)",
-          display:"flex",justifyContent:"space-between"}}>
-          <span style={{color:"rgba(255,255,255,0.18)",fontSize:10,fontFamily:"'Space Mono',monospace"}}>
-            XC90 D5 · 2019 · Plan Maestro v4</span>
-          <span style={{color:"rgba(255,255,255,0.18)",fontSize:10,fontFamily:"'Space Mono',monospace"}}>
-            {Object.values(allChecks).reduce((a,v)=>a+Object.values(v).filter(Boolean).length,0)} checks totales</span>
-        </div>
-      </div>
-    </div>
-  );
+  // Comentarios
+  main.appendChild(renderComentarios(comentario));
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  React.createElement(React.StrictMode, null, React.createElement(App, null))
-);
-  </script>
+function renderSistemaMixed(sis,allTareas,filteredTareas){
+  const kmk=String(STATE.km);
+  const checks=STATE.checks[kmk]||{};
+  const done=allTareas.filter(t=>checks[t.id]).length;
+  const total=allTareas.length;
+  const allDone=done===total&&total>0;
+  const expanded=!!STATE.expandedSis[sis.id];
+
+  const ring=svgRing(done,total,44,4,sis.color);
+  const nameRow=el('div',{style:{flex:'1'}},
+    el('div',{class:'row',style:{gap:'6px'}},
+      el('span',{class:'sis-name',style:{color:allDone?sis.color:'#e8f4f8'}},sis.label),
+      allDone?el('span',{class:'sis-done-badge',style:{background:sis.color}},'✓ LISTO'):''
+    ),
+    el('span',{class:'sis-pct'},done+'/'+total+' · '+Math.round(done/total*100||0)+'%')
+  );
+
+  const header=el('button',{class:'sis-header',onClick:()=>{
+    STATE.expandedSis[sis.id]=!STATE.expandedSis[sis.id]; renderMain();
+  }},ring,nameRow,
+    el('span',{class:'sis-chevron'+(expanded?' open':'')},'▾')
+  );
+
+  const wrap=el('div',{class:'sis-wrap'+(allDone?' done':'')},header);
+  if(allDone) wrap.style.borderColor=sis.color+'55';
+
+  if(expanded){
+    const pct=Math.round(done/total*100||0);
+    const body=el('div',{class:'sis-body'},
+      el('div',{class:'sis-prog'},
+        el('div',{class:'sis-prog-fill',style:{background:sis.color,width:pct+'%'}})
+      ),
+      ...filteredTareas.map(t=>renderTask(t))
+    );
+    wrap.appendChild(body);
+  }
+  return wrap;
+}
+
+function renderComentarios(value){
+  const wrap=el('div',{id:'comentarios-wrap'});
+  const hdr=el('div',{id:'comentarios-header'},
+    el('p',{},'💬 Comentarios de la revisión'),
+    el('small',{},'Observaciones · taller · pendientes para próxima revisión')
+  );
+  const ta=el('textarea',{id:'comentarios-ta',placeholder:'Ej:\n— Turbo con ligero ruido a 3000 rpm, monitorizar\n— Neumáticos al límite, cambiar en próxima revisión\n— Taller: Autovolvo Madrid · Mecánico: Carlos · Factura nº 1234'},value);
+  ta.addEventListener('input',e=>{
+    const kmk=String(STATE.km);
+    STATE.comentarios[kmk]=e.target.value;
+    scheduleSave();
+  });
+  wrap.appendChild(hdr);
+  wrap.appendChild(ta);
+  return wrap;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FULL RENDER
+══════════════════════════════════════════════════════════ */
+function render(){
+  renderMatricula();
+  renderAuthBar();
+  renderKmSelect();
+  renderMain();
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+// Populate KM select
+const sel=document.getElementById('km-select');
+KM_STEPS.forEach(km=>{
+  const opt=document.createElement('option');
+  opt.value=km; opt.textContent=km.toLocaleString('es-ES')+' km';
+  sel.appendChild(opt);
+});
+
+// Load from localStorage
+lsLoad();
+
+// Initial render
+render();
+
+// If km was saved, update select
+if(STATE.km) document.getElementById('km-select').value=STATE.km;
+
+</script>
 </body>
 </html>
